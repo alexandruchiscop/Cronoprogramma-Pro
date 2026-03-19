@@ -1,0 +1,958 @@
+/* region =========================================
+   1. VARIABILI E RESET
+   ========================================= */
+:root {
+    --primary: #2563eb;
+    --primary-light: #eff6ff;
+    --bg: #f1f5f9;
+    --white: #ffffff;
+    --text-main: #0f172a;
+    --text-sub: #475569;
+    --border: #e2e8f0;
+    
+    /* Colori Stati */
+    --success-text: #065f46;
+    --success-bg: #d1fae5;
+    --success-badge: #a7f3d0;
+    --danger-text: #991b1b;
+    --danger-bg: #fee2e2;
+    --danger-badge: #fecaca;
+    --festa-bg: #fff1f2;
+}
+
+body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background-color: var(--bg);
+    color: var(--text-main);
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.app-wrapper { 
+    width: 100%; 
+    max-width: 650px; 
+}
+
+/* =========================================
+   2. HEADER E CARD
+   ========================================= */
+header { text-align: center; margin-bottom: 25px; }
+header h1 { font-size: 1.5rem; margin-bottom: 5px; font-weight: 700; }
+
+.badge { 
+    font-size: 0.65rem; 
+    background: var(--primary); 
+    color: white; 
+    padding: 3px 8px; 
+    border-radius: 10px; 
+    vertical-align: middle; 
+}
+
+.main-card, .details-card {
+    background: var(--white);
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+/* =========================================
+   3. FORM E INPUT (SETUP)
+   ========================================= */
+.setup-section { 
+    display: grid; 
+    /* 1fr (Input) - 50px (Reset) - 1fr (Input) */
+    grid-template-columns: 1fr 50px 1fr; 
+    gap: 15px; 
+    align-items: end; /* Allinea tutto alla base */
+}
+
+.input-field label { 
+    font-size: 0.8rem; 
+    font-weight: 600; 
+    color: var(--text-sub); 
+    margin-bottom: 6px; 
+    display: block; 
+}
+
+input { 
+    width: 100%; 
+    padding: 12px; 
+    border: 1px solid var(--border); 
+    border-radius: 12px; 
+    font-size: 16px;
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+
+/* =========================================
+   4. PULSANTI (BOTTONI)
+   ========================================= */
+
+/* Selettore Modalità (Tab) */
+.mode-selector {
+    display: flex;
+    background: var(--bg);
+    padding: 4px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+}
+
+.tab-btn {
+    flex: 1;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    background: transparent;
+    color: var(--text-sub);
+    transition: all 0.2s ease;
+}
+
+.tab-btn.active {
+    background: var(--white);
+    color: var(--primary);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.btn-primary {
+    grid-column: 1 / -1;
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 16px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+/* Pulsante Sabato Lavorativo (Toggle) */
+.btn-toggle-sat {
+    grid-column: 1 / -1;
+    background: transparent;
+    color: var(--text-sub);
+    border: 2px solid var(--border);
+    padding: 14px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.btn-toggle-sat.active {
+    background: var(--primary-light);
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+.btn-outline {
+    width: 100%;
+    background: white;
+    border: 1.5px solid var(--border);
+    padding: 12px;
+    border-radius: 12px;
+    color: var(--text-sub);
+    font-weight: 600;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.btn-copy {
+    background: var(--white);
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    padding: 5px 12px;
+    border-radius: 8px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    margin-top: 10px;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+/* SANTO PATRONO DEI BOTTONI: CONTENITORE E INPUTS */
+.patrono-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 5px;
+}
+
+/* Bottone stile Sabato Lavorativo */
+.btn-toggle-patrono {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    border: 2px solid #e2e8f0;
+    background: #f8fafc;
+    color: #64748b;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-toggle-patrono.active {
+    background: white; /* Non più blu pieno */
+    border-color: var(--primary); /* Bordo blu */
+    color: var(--primary); /* Testo blu */
+    box-shadow: 0 0 0 1px var(--primary); /* Rende il bordo un po' più marcato */
+}
+
+/* Riga degli input centrata */
+.patrono-inputs-row {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+    padding: 10px 0;
+}
+
+.input-mini {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.input-mini label {
+    font-size: 0.65rem;
+    font-weight: 800;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Input GG e MM grandi e centrati */
+.input-mini input {
+    width: 85px; /* Aumentato da 70px a 85px per dare respiro */
+    height: 55px;
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 800;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    color: var(--primary);
+    background: white;
+    -moz-appearance: textfield; /* Per Firefox */
+}
+
+.input-mini input:focus {
+    border-color: var(--primary);
+    outline: none;
+}
+
+/* Stile del tasto stampa (uguale al btn-copy ma con colori diversi) */
+.btn-print {
+    background: var(--white);
+    border: 1px solid #64748b;
+    color: #64748b;
+    padding: 5px 12px;
+    border-radius: 8px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    margin-top: 10px;
+    margin-left: 5px;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+/* =========================================
+   REGOLE PER IL PDF / STAMPA
+   ========================================= */
+@media print {
+    /* 1. Nasconde solo gli elementi di input/interazione */
+    header, 
+    .mode-selector, 
+    .setup-section, 
+    .scelta-vista-switcher, 
+    .btn-copy, 
+    .btn-print, 
+    .btn-reset-wrapper,
+    .ferie-container {
+        display: none !important;
+    }
+
+    /* 2. Forza il contenitore a occupare tutta la larghezza del foglio */
+    body {
+        background: white !important;
+        margin: 0;
+        padding: 10mm; /* Margine tecnico per la stampante */
+    }
+
+    .app-wrapper {
+        max-width: 100% !important;
+        box-shadow: none !important;
+    }
+
+    .main-card {
+        box-shadow: none !important;
+        padding: 0 !important;
+    }
+
+    /* 3. FORZA LA VISIBILITÀ DI TUTTO IL CONTENUTO */
+    #result, #logContainer, #calendarContainer {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+
+    /* 4. Mantiene i colori (Verde, Rosso, Blu) nel PDF */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* 5. Evita che il calendario o la tabella vengano tagliati a metà */
+    .calendar-card, table {
+        page-break-inside: avoid;
+    }
+
+    /* Rende i testi un po' più scuri per la lettura su carta */
+    .stat-val, h2 {
+        color: #000 !important;
+    }
+}
+/* Tasto Reset Centrale */
+.btn-reset-wrapper {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 5px; /* Lo allinea visivamente agli input */
+}
+
+.btn-reset {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    width: 42px;
+    height: 42px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-sub);
+    transition: all 0.2s;
+}
+
+.btn-reset:hover {
+    background: var(--danger-bg);
+    color: var(--danger-text);
+    border-color: var(--danger-badge);
+}
+
+/* =========================================
+   5. RISULTATI (CARDS E STATS)
+   ========================================= */
+.target-date-card {
+    text-align: center;
+    background: var(--primary-light);
+    padding: 20px;
+    border-radius: 16px;
+    margin: 20px 0;
+    border: 1px solid #dbeafe;
+}
+
+.target-date-card h2 { font-size: 1.4rem; color: var(--primary); margin: 5px 0; }
+
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.stat-item { 
+    background: #f8fafc; 
+    padding: 12px; 
+    border-radius: 12px; 
+    text-align: center; 
+    border: 1px solid #f1f5f9; 
+}
+
+.stat-val { display: block; font-size: 1.3rem; font-weight: 700; color: var(--text-main); }
+.stat-label { font-size: 0.7rem; color: var(--text-sub); text-transform: uppercase; }
+
+/* =========================================
+   6. TABELLA ANALITICA
+   ========================================= */
+.table-wrapper { overflow-x: hidden; }
+
+table { 
+    width: 100%; 
+    border-collapse: collapse; 
+    margin-top: 10px; 
+    table-layout: fixed; 
+}
+
+th, td { 
+    padding: 12px 2px; 
+    text-align: center; 
+    vertical-align: middle; 
+}
+
+/* Proporzioni Colonne */
+th:nth-child(1), td:nth-child(1) { width: 45px; } 
+th:nth-child(2), td:nth-child(2) { width: auto; }
+th:nth-child(3), td:nth-child(3) { width: 105px; }
+
+.data-evidenziata {
+    font-weight: 800;
+    color: var(--text-main);
+    font-size: 0.95rem;
+    letter-spacing: -0.2px;
+}
+
+.status-badge {
+    width: 85px;
+    padding: 6px 0;
+    border-radius: 6px;
+    font-size: 0.65rem;
+    font-weight: 850;
+    text-transform: uppercase;
+    display: inline-block;
+    text-align: center;
+}
+
+/* Colori Righe e Badge */
+.row-lavorativo { background-color: var(--success-bg); }
+.row-lavorativo .status-badge { color: var(--success-text); background-color: var(--success-badge); }
+
+.row-weekend { background-color: var(--danger-bg); }
+.row-weekend .status-badge { color: var(--danger-text); background-color: var(--danger-badge); }
+
+.row-festa { background-color: var(--festa-bg); border-left: 4px solid #ef4444; }
+.row-festa .status-badge { color: var(--danger-text); background-color: var(--danger-badge); }
+
+/* =========================================
+   7. RESPONSIVE (MEDIA QUERIES) - DEFINITIVO
+   ========================================= */
+@media (max-width: 480px) {
+    body { padding: 10px; display: block; } /* Rimuove il flex dal body per evitare schiacciamenti */
+
+    .app-wrapper { max-width: 100%; }
+
+    /* Forza il layout verticale puro nel setup */
+    .setup-section { 
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: stretch !important; 
+        gap: 20px !important;
+    }
+
+    /* Sistema i singoli contenitori di input */
+    .input-field {
+        width: 100% !important;
+        text-align: left !important;
+    }
+
+    .input-field label {
+        text-align: left !important;
+        margin-left: 5px;
+    }
+
+    /* Rende il tasto Reset visibile e centrato */
+    .btn-reset-wrapper { 
+        order: 2 !important; 
+        margin: 0 !important;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    .btn-reset {
+        width: 50px !important;
+        height: 50px !important;
+        background-color: #f8fafc;
+    }
+
+    /* Ordine degli elementi */
+    .setup-section > div:nth-child(1) { order: 1; } /* Inizio */
+    .setup-section > div:nth-child(3) { order: 3; } /* Durata */
+    .ferie-container { order: 4; width: 100%; }
+    .btn-toggle-sat { order: 5; width: 100% !important; }
+    .btn-primary { order: 6; width: 100% !important; margin-top: 10px; }
+
+    /* Periodi sospensione: facciamoli diventare delle "card" */
+    .periodo-item {
+        flex-direction: column !important;
+        gap: 10px !important;
+        background: #fff !important;
+        padding: 12px !important;
+        border: 1px solid var(--border) !important;
+    }
+
+    .periodo-item input[type="date"] {
+        width: 100% !important;
+    }
+
+    .btn-remove-periodo {
+        width: 100% !important;
+        height: 40px !important;
+    }
+
+    /* --- RISULTATI E STATS (AFFIANCATE) --- */
+    .stats-grid { 
+        grid-template-columns: 1fr 1fr !important; /* Qui le teniamo affiancate */
+        gap: 10px !important;
+    }
+
+    .stat-val { font-size: 1.1rem !important; }
+    .stat-label { font-size: 0.6rem !important; }
+
+    .target-date-card { padding: 15px 10px !important; }
+    .target-date-card h2 { font-size: 1.2rem !important; }
+}
+
+/* =========================================
+   8. SEZIONE FERIE A SCOMPARSA
+   ========================================= */
+
+/* Sezione Ferie a scomparsa */
+.ferie-container {
+    grid-column: 1 / -1;
+    margin-bottom: 10px;
+}
+
+.btn-ferie-toggle {
+    width: 100%;
+    background: transparent;
+    border: 1px dashed var(--border);
+    color: var(--text-sub);
+    padding: 8px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.ferie-menu {
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 15px;
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: all 1s ease-in-out;
+}
+
+.check-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-main);
+    cursor: pointer;
+}
+
+.check-item input {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+input:focus {
+    border-color: var(--primary);
+    outline: none;
+    box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+/* Quando ci sono sospensioni o patrono attivi, il tasto si evidenzia leggermente */
+.btn-ferie-toggle.has-data {
+    border-color: var(--primary);
+    background-color: #f0f7ff; /* Un azzurro chiarissimo */
+    color: var(--primary);
+    font-weight: 700;
+}
+
+/* Un piccolo indicatore visivo (freccetta) che ruota quando apri/chiudi */
+.btn-ferie-toggle::after {
+    content: '▼';
+    font-size: 0.7rem;
+    margin-left: 10px;
+    transition: transform 0.3s;
+    display: inline-block;
+}
+
+.btn-ferie-toggle.open::after {
+    transform: rotate(180deg);
+}
+
+/* Stile per i periodi di sospensione dinamici */
+.periodo-item {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+    align-items: center;
+    animation: slideIn 0.2s ease-out;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.periodo-item input[type="date"] {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
+
+.btn-remove-periodo {
+    background: #fee2e2;
+    color: #dc2626;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.btn-remove-periodo:hover {
+    background: #fecaca;
+}
+
+.btn-aggiungi-periodo {
+    width: 100%;
+    background: var(--bg-card);
+    color: var(--primary);
+    border: 2px dashed var(--primary);
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+/* Stile per campi ferie errati */
+.input-error {
+    border: 2px solid var(--danger-text) !important;
+    background-color: var(--danger-bg) !important;
+}
+
+.warning-text {
+    color: var(--danger-text);
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-top: -5px;
+    margin-bottom: 10px;
+    display: none; /* Nascosto di default */
+}
+
+.periodo-header {
+    margin-bottom: 5px;
+}
+
+.f-note {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.8rem;
+    padding: 4px 0;
+    color: var(--primary);
+    background: transparent;
+    outline: none;
+}
+
+.f-note:focus {
+    border-bottom-color: var(--primary);
+}
+
+/* Badge per il conteggio sospensioni */
+.badge-count {
+    background-color: #2563eb; /* Blu di default */
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 12px;
+    margin-left: 10px;
+    display: inline-block;
+    vertical-align: middle;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+/* Colore arancione se c'è un errore nelle date */
+.badge-error {
+    background-color: #f59e0b !important; /* Arancione */
+    animation: pulse-error 1.5s infinite;
+}
+
+@keyframes pulse-error {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); box-shadow: 0 0 10px #f59e0b; }
+    100% { transform: scale(1); }
+}
+
+/* Stile per la sospensione fuori dal periodo calcolato */
+.periodo-fuori-raggio {
+    opacity: 0.5; /* Diventa semitrasparente */
+    filter: grayscale(0.8); /* Quasi in bianco e nero */
+    border: 1px dashed #cbd5e1; /* Bordo tratteggiato */
+    background-color: #f8fafc;
+    transition: all 0.4s ease;
+}
+
+/* Un piccolo badge interno opzionale per chiarezza */
+.fuori-label {
+    font-size: 0.6rem;
+    color: #64748b;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-left: 5px;
+}
+
+/* =========================================
+   9. CALENDARIO E MAPPA VISIVA
+   ========================================= */
+
+/* --- NUOVO SELETTORE VISTA (LISTA/CALENDARIO) --- */
+
+/* Contenitore dei bottoni */
+.scelta-vista-switcher {
+    display: flex;
+    background: #f1f5f9; /* Grigio freddo chiaro */
+    padding: 6px;
+    border-radius: 14px;
+    margin: 20px 0;
+    gap: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+/* Stile base simile al btn-toggle-sat */
+.view-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+    color: #64748b;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+/* Quando il tasto è "attivo" (finestra aperta) */
+.view-btn.active {
+    background: white;
+    color: var(--primary);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transform: translateY(-1px);
+}
+
+.view-btn:not(.active):hover {
+    background: #e2e8f0;
+    color: #475569;
+}
+
+/* Animazione di entrata per i dati (Tabella o Calendario) */
+#logContainer, #calendarContainer {
+    animation: fadeIn 0.3s ease-out;
+}
+
+.view-selector {
+    display: flex;
+    justify-content: center;
+    background-color: #f1f5f9; /* Sfondo grigio chiaro del contenitore */
+    padding: 4px;
+    border-radius: 10px;
+    margin: 15px 0;
+    border: 1px solid #e2e8f0;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.view-btn {
+    flex: 1;
+    padding: 8px 12px;
+    border: none;
+    background: transparent;
+    color: #64748b;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+/* ANIMAZIONE DI VIBRAZIONE PER ATTENZIONE */
+/* Definizione dell'animazione di vibrazione */
+@keyframes shake-attention {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    50% { transform: translateX(4px); }
+    75% { transform: translateX(-4px); }
+    100% { transform: translateX(0); }
+}
+
+/* Classe che applicheremo via JavaScript */
+.shake-now {
+    animation: shake-attention 0.4s ease-in-out;
+    border-color: var(--primary) !important; /* Diventa blu per un attimo */
+    box-shadow: 0 0 15px rgba(37, 99, 235, 0.2);
+}
+
+/* Stato attivo del tasto (quando selezionato) */
+.view-btn.active {
+    background-color: white;
+    color: #2563eb;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* --- CALENDARIO E MAPPA VISIVA (Tuo codice esistente ottimizzato) --- */
+.calendar-card {
+    background: white;
+    padding: 15px; /* Ridotto leggermente per mobile */
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    margin-top: 10px;
+}
+
+#calendarGrid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-top: 10px;
+}
+
+/* HEADER GIORNI (L, M, M...) */
+.cal-header {
+    text-align: center;
+    font-weight: 800;
+    font-size: 0.7rem;
+    color: #94a3b8;
+    padding-bottom: 5px;
+    text-transform: uppercase;
+}
+
+/* QUADRATINO GIORNO */
+.cal-day {
+    aspect-ratio: 1 / 1;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #f1f5f9;
+    transition: transform 0.1s;
+}
+
+.cal-date {
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.cal-label {
+    font-size: 0.55rem;
+    font-weight: 600;
+    text-align: center;
+    line-height: 1;
+}
+
+/* --- OTTIMIZZAZIONE TELEFONO --- */
+@media (max-width: 480px) {
+    #calendarGrid {
+        gap: 2px; /* Spazio minimo tra i giorni */
+    }
+
+    .cal-day {
+        border-radius: 4px;
+    }
+
+    .cal-date {
+        font-size: 0.8rem; /* Numeri leggermente più piccoli */
+    }
+
+    /* Nascondiamo il testo lungo (es. "LAVORATIVO") e lasciamo solo il numero GG o un puntino */
+    .cal-label {
+        font-size: 0.5rem;
+        transform: scale(0.8); /* Forza la riduzione se il font non scende più */
+    }
+
+    /* Se è un weekend o festa, nascondiamo la scritta per non affollare */
+    .cal-weekend .cal-label, 
+    .cal-festa .cal-label, 
+    .cal-sosp .cal-label {
+        display: none; 
+    }
+    
+    /* Aggiungiamo un piccolo puntino colorato in basso per indicare lo stato senza testo */
+    .cal-festa::after, .cal-sosp::after, .cal-weekend::after {
+        content: "";
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        margin-top: 2px;
+    }
+/* Aggiungiamo un piccolo puntino colorato in basso */
+    .cal-festa::after, .cal-sosp::after, .cal-weekend::after {
+        content: "";
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        margin-top: 2px;
+    }
+
+    /* Weekend e Festa ora hanno entrambi il pallino ROSSO */
+    .cal-festa::after, .cal-weekend::after { 
+        background: #ef4444; 
+    }
+
+    /* Sospensione rimane ARANCIONE */
+    .cal-sosp::after { 
+        background: #f97316; 
+    }
+}
+/* Colori Mappa */
+
+/* Verde */
+.cal-lavorativo { background-color: #dcfce7; color: #166534; border-color: #bbf7d0; }
+/* Weekend ora è rosso come la festa */
+.cal-weekend, .cal-festa { background-color: #fee2e2 !important; color: #991b1b !important; border-color: #fecaca !important; }
+/* Arancio */
+.cal-sosp { background-color: #fef3c7; color: #92400e; border-color: #fde68a; } 
+
+/* Titolo del mese nel calendario */
+.cal-month-title {
+    grid-column: span 7; /* Occupa tutte e 7 le colonne della griglia */
+    text-align: left;
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: #1e293b;
+    padding: 20px 0 10px 5px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid #f1f5f9;
+    margin-bottom: 5px;
+}
+
+/* Un piccolo aggiustamento per distanziare i mesi se ce n'è più di uno */
+.cal-month-title:not(:first-child) {
+    margin-top: 20px;
+}

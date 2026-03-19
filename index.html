@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">   
+    <title>Cronoprogramma Pro 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-wrapper">
+        <header>
+            <h1>Cronoprogramma <span class="badge">Pro</span></h1>
+            <p>Pianificazione tecnica deterministica</p>
+        </header>
+
+        <main class="main-card">
+            <div class="mode-selector">
+                <button id="tabForward" class="tab-btn active" onclick="switchMode('forward')">Pianifica</button>
+                <button id="tabBackward" class="tab-btn" onclick="switchMode('backward')">Retro-Planning</button>
+            </div>
+
+            <section class="setup-section">
+    <div class="input-field">
+        <label>Inizio Lavori</label>
+        <input type="date" id="startDate" value="2026-03-19">
+    </div>
+
+    <div class="btn-reset-wrapper">
+        <button type="button" class="btn-reset" onclick="resetParametri()" title="Resetta tutto">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                <path d="M3 3v5h5"></path>
+            </svg>
+        </button>
+    </div>
+
+    <div class="input-field" id="dynamicField">
+        <label id="dynamicLabel">Durata Lavorativa (gg)</label>
+        <input type="number" id="days" value="10">
+        <input type="date" id="endDateInput" style="display:none;">
+    </div>
+
+   <div class="ferie-container">
+    <button type="button" class="btn-ferie-toggle" onclick="toggleFerieMenu()">
+        Gestione Sospensione Feriale e Patrono
+        <span id="badgeFerie" class="badge-count" style="display:none;">0</span>
+    </button>
+    
+    <div id="ferieMenu" class="ferie-menu" style="display: none;">
+        <div id="listaSospensioni"></div>
+        
+<div class="patrono-container">
+    <button type="button" id="btnPatrono" class="btn-toggle-patrono" onclick="togglePatrono()">
+        Festa Santo Patrono: NO
+    </button>
+    
+    <div id="patronoInputs" class="patrono-inputs-row" style="display: none;">
+        <div class="input-mini">
+    <label>Giorno</label>
+    <input type="number" id="patronoGiorno" placeholder="GG" oninput="eseguiCalcoloCorretto()">
+</div>
+<div class="input-mini">
+    <label>Mese</label>
+    <input type="number" id="patronoMese" placeholder="MM" oninput="eseguiCalcoloCorretto()">
+</div>
+    </div>
+</div>
+<hr style="border: 0; border-top: 1px solid #eee; margin: 15px 0;">        <button type="button" class="btn-aggiungi-periodo" onclick="aggiungiPeriodo()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Aggiungi Periodo
+        </button>
+        
+        <p style="font-size: 0.7rem; color: var(--text-sub); margin-top: 8px; line-height: 1.2;">
+            * I giorni compresi nei periodi sopra indicati saranno esclusi dal conteggio lavorativo.
+        </p>
+    </div>
+</div>
+
+    <button id="btnSat" onclick="toggleSabato()" class="btn-toggle-sat">
+        Sabato Lavorativo: NO
+    </button>
+
+    <button id="mainBtn" onclick="eseguiCalcoloCorretto()" class="btn-primary">Calcola Scadenza</button>
+</section>
+
+            <section id="result" class="result-section" style="display: none;">
+                <div class="divider"></div>
+                
+                <div class="target-date-card">
+                    <span class="label" id="resultLabel">CONSEGNA PREVISTA</span>
+                    <h2 id="endDate"></h2>
+                    <div class="action-buttons">
+                    <button onclick="copiaRisultato()" class="btn-copy">Copia Riepilogo</button>
+                    <button onclick="window.print()" class="btn-print">Scarica PDF / Stampa</button>
+                </div>
+            </div>
+
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-val" id="stat-lav">-</span>
+                        <span class="stat-label">GG Lavorativi</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-val" id="stat-sol">-</span>
+                        <span class="stat-label">GG Solari totali</span>
+                    </div>
+                </div>
+               <div class="scelta-vista-switcher">
+    <button id="btnViewTable" class="view-btn active" onclick="switchView('table')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+        Lista Dettagliata
+    </button>
+    <button id="btnViewCal" class="view-btn" onclick="switchView('calendar')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+        Vista Calendario
+    </button>
+</div>
+
+                <section id="calendarContainer" class="calendar-card" style="display: none;">
+                    <div id="calendarGrid"></div>
+                </section>
+        </main>
+
+        <section id="logContainer" class="details-card" style="display: none;">
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>N° GG</th>
+                            <th>Data</th>
+                            <th>Stato</th>
+                        </tr>
+                    </thead>
+                    <tbody id="logBody"></tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
