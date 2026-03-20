@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Apre il modal
     btnOpen.addEventListener('click', () => {
         modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden'; // <--- BLOCCA LO SCROLL
         textarea.focus();
     });
 
@@ -47,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Funzione per chiudere e resettare
 function chiudiModalFeedback() {
     document.getElementById('feedbackModal').style.display = 'none';
+    document.body.style.overflow = ''; // <--- RIPRISTINA LO SCROLL
     document.getElementById('feedbackForm').style.display = 'block';
     document.getElementById('feedbackSuccess').style.display = 'none';
 }
