@@ -8,6 +8,17 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div id="lockScreen" class="lock-overlay">
+    <div class="lock-card">
+        <h2>Accesso Riservato</h2>
+        <input type="password" id="passInput" placeholder="Inserisci password...">
+        <button id="btnUnlock" class="btn-primary">Sblocca</button>
+        <div id="lockError" style="display:none; color:red;">Password errata!</div>
+    </div>
+</div>
+
+<script src="access.js"></script>
+<script src="script.js"></script>
     <div class="app-wrapper">
         <header>
             <h1>Cronoprogramma <span class="badge">Pro</span></h1>
