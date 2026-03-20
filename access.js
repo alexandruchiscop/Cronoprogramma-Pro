@@ -1,7 +1,7 @@
 /**
  * ACCESS.JS - Gestione Sicurezza tramite Whitelist Google Sheets
  */
-const URL_SCRIPT_GOOGLE = "https://script.google.com/macros/s/AKfycbwl2OMbvj5Rp8Bdo0JF1kHT77xzOZLEy836-zgFcLaZJuqXBPcF8KVBbSUoLbHcJFzVIg/exec";
+const URL_SCRIPT_GOOGLE = "https://script.google.com/macros/s/AKfycbytxrj0mCSIaNjJ0wkNXzs6aiuDgeR7XLQ5gyozz0osNVE5bwzW-AmUfTy-DwZdSCI5pA/exec";
 
 document.addEventListener('DOMContentLoaded', () => {
     const btn = document.getElementById('btnUnlock');
