@@ -1082,3 +1082,50 @@ input:focus {
     font-weight: 600;
     margin-top: 10px;
 }
+
+/* region =========================================
+   11. PULSANTE FEEDBACK
+   ========================================= */
+
+/* Pulsante Flottante */
+.btn-feedback-float {
+    position: fixed; bottom: 25px; right: 25px;
+    background: #2563eb; border: none; border-radius: 50%;
+    width: 60px; height: 60px; display: flex;
+    align-items: center; justify-content: center;
+    cursor: pointer; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
+    transition: transform 0.2s; z-index: 999;
+}
+.btn-feedback-float:hover { transform: scale(1.1); }
+
+/* Modal Overlay */
+.modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(15, 23, 42, 0.7);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 10001; backdrop-filter: blur(4px);
+}
+
+/* Scheda Modal */
+.modal-card {
+    background: white; padding: 30px; border-radius: 20px;
+    width: 90%; max-width: 480px; 
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    animation: slideUp 0.3s ease-out;
+}
+
+.modal-card textarea {
+    width: 100%; height: 140px; padding: 15px;
+    margin: 15px 0; border: 2px solid #e2e8f0;
+    border-radius: 12px; font-family: inherit; resize: none; outline: none;
+}
+.modal-card textarea:focus { border-color: #2563eb; }
+
+.modal-footer { display: flex; gap: 10px; justify-content: flex-end; }
+.btn-cancel { background: #f1f5f9; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; }
+.btn-send { background: #2563eb; color: white; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-weight: 600; }
+
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
