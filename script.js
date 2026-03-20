@@ -76,43 +76,50 @@ function aggiungiPeriodo(start = "", end = "", note = "") {
 
 function switchMode(mode) {
     currentMode = mode;
-    const tabF = document.getElementById('tabForward'), tabB = document.getElementById('tabBackward');
-    const daysInput = document.getElementById('days'), endDateInput = document.getElementById('endDateInput');
-    const label = document.getElementById('dynamicLabel'), mainBtn = document.getElementById('mainBtn');
-    const resultLabel = document.getElementById('resultLabel');
+    
+    // Gestione Tab
+    document.getElementById('tabForward').classList.toggle('active', mode === 'forward');
+    document.getElementById('tabBackward').classList.toggle('active', mode === 'backward');
 
-    tabF.classList.toggle('active', mode === 'forward');
-    tabB.classList.toggle('active', mode === 'backward');
+    const inputGiorni = document.getElementById('days');
+    const inputScadenza = document.getElementById('endDateInput');
+    const labelDinamica = document.getElementById('dynamicLabel');
+    const resultLabel = document.getElementById('resultLabel');
+    const mainBtn = document.getElementById('mainBtn');
 
     if (mode === 'forward') {
-        daysInput.style.display = 'block'; 
-        endDateInput.style.display = 'none';
-        label.innerText = "Durata Lavorativa (gg)"; 
-        mainBtn.innerText = "Calcola Scadenza";
+        // TRASFORMAZIONE IN "PIANIFICA"
+        inputGiorni.style.display = 'block';
+        inputScadenza.style.display = 'none';
+        labelDinamica.innerText = "Durata Lavorativa (gg)";
         resultLabel.innerText = "CONSEGNA PREVISTA";
+        mainBtn.innerText = "Calcola Scadenza";
     } else {
-        daysInput.style.display = 'none'; 
-        endDateInput.style.display = 'block';
-        label.innerText = "Fine Lavori (Scadenza)"; 
-        mainBtn.innerText = "Calcola Giorni Disponibili";
+        // TRASFORMAZIONE IN "RETRO-PLANNING"
+        inputGiorni.style.display = 'none';
+        inputScadenza.style.display = 'block';
+        labelDinamica.innerText = "Fine Scadenza";
         resultLabel.innerText = "GIORNI DISPONIBILI";
+        mainBtn.innerText = "Calcola Giorni Disponibili";
+        
+        // Imposta data di oggi se vuota
+        if (!inputScadenza.value) {
+            inputScadenza.value = new Date().toISOString().split('T')[0];
+        }
     }
 
-    // --- RESET DELLE VISTE IN FONDO (Novità) ---
-    // Nascondiamo i contenitori della lista e del calendario
-    const logContainer = document.getElementById('logContainer');
-    const calendarContainer = document.getElementById('calendarContainer');
-    if (logContainer) logContainer.style.display = 'none';
-    if (calendarContainer) calendarContainer.style.display = 'none';
-
-    // Rimuoviamo lo stato "attivo" dai due tasti in fondo
-    const btnT = document.getElementById('btnViewTable');
-    const btnC = document.getElementById('btnViewCal');
-    if (btnT) btnT.classList.remove('active');
-    if (btnC) btnC.classList.remove('active');
-    // --------------------------------------------
-
     eseguiCalcoloCorretto();
+}
+
+function animazioneReset() {
+    const btn = document.getElementById('btnReset');
+    btn.classList.add('spin-animation'); // Assicurati di avere @keyframes rotateReset nel CSS
+    
+    resetParametri(); // La tua funzione originale di pulizia
+    
+    setTimeout(() => {
+        btn.classList.remove('spin-animation');
+    }, 600);
 }
 
 function toggleSabato() {
@@ -148,11 +155,10 @@ function eseguiCalcoloCorretto() {
         inputsPatrono.style.display = patronoAttivo ? 'flex' : 'none';
     }
 
-    // 2. ESECUZIONE CALCOLO
-    if (currentMode === 'forward') { 
-        calcolaCronoprogramma(); 
+ if (currentMode === 'forward') { 
+        calcolaCronoprogramma(false); // <--- FORZA FALSE: Niente scroll
     } else { 
-        calcolaRetroPlanning(); 
+        calcolaRetroPlanning(false); // <--- FORZA FALSE: Niente scroll
     }
     
     // 3. SALVATAGGIO VALORI
@@ -168,26 +174,53 @@ function eseguiCalcoloCorretto() {
 }
 
 function resetParametri() {
+    // 1. Ripristina la data di oggi
     const oggi = new Date().toISOString().split('T')[0];
-    document.getElementById('startDate').value = oggi;
-    document.getElementById('days').value = "";
-    document.getElementById('endDateInput').value = "";
-    document.getElementById('listaSospensioni').innerHTML = "";
-    aggiungiPeriodo();
-    document.getElementById('ferieMenu').style.display = 'none';
-    document.getElementById('result').style.display = 'none';
+    const startDateInput = document.getElementById('startDate');
+    if (startDateInput) startDateInput.value = oggi;
+
+    // 2. Svuota la durata
+    const daysInput = document.getElementById('days');
+    if (daysInput) daysInput.value = "";
+
+    // 3. Svuota e resetta le sospensioni (ferie)
+    const listaSosp = document.getElementById('listaSospensioni');
+    if (listaSosp) {
+        listaSosp.innerHTML = "";
+        aggiungiPeriodo(); // Ne aggiunge uno vuoto per default
+    }
+
+    // 4. Chiude i menu e nasconde i risultati
+    const ferieMenu = document.getElementById('ferieMenu');
+    if (ferieMenu) ferieMenu.style.display = 'none';
+    
+    const resultSection = document.getElementById('result');
+    if (resultSection) resultSection.style.display = 'none';
+
+    // 5. Pulisce i log e le viste (Tabella/Calendario)
     const logContainer = document.getElementById('logContainer');
-    if(logContainer) logContainer.style.display = 'none';
-    document.getElementById('logBody').innerHTML = "";
+    if (logContainer) logContainer.style.display = 'none';
     
-    if (currentMode === 'forward') { document.getElementById('days').focus(); } 
-    else { document.getElementById('endDateInput').focus(); }
-    
+    const logBody = document.getElementById('logBody');
+    if (logBody) logBody.innerHTML = "";
+
     const grid = document.getElementById('calendarGrid');
-    if(grid) grid.innerHTML = "";
-    document.getElementById('calendarContainer').style.display = 'none';
-    document.getElementById('btnViewTable').classList.add('active');
-    document.getElementById('btnViewCal').classList.remove('active');
+    if (grid) grid.innerHTML = "";
+
+    const calContainer = document.getElementById('calendarContainer');
+    if (calContainer) calContainer.style.display = 'none';
+
+    // 6. Reset tasti vista
+    const btnT = document.getElementById('btnViewTable');
+    const btnC = document.getElementById('btnViewCal');
+    if (btnT) btnT.classList.add('active');
+    if (btnC) btnC.classList.remove('active');
+
+    // 7. Focus automatico sul campo giorni per ricominciare subito
+    if (daysInput) daysInput.focus();
+
+    // 8. Esegue un ricalcolo "vuoto" per aggiornare i badge/localStorage
+    eseguiCalcoloCorretto();
 }
 
 /* =========================================
@@ -304,7 +337,7 @@ function aggiornaStatoPatrono() {
     localStorage.setItem('patronoAttivo', patronoAttivo);
 }
 
-function calcolaCronoprogramma() {
+function calcolaCronoprogramma(usaEffetti = false) {    
     const startInput = document.getElementById('startDate').value;
     const daysInput = parseInt(document.getElementById('days').value);
     if (!startInput || isNaN(daysInput) || daysInput <= 0) return;
@@ -326,23 +359,33 @@ function calcolaCronoprogramma() {
         registroGiorni.push(analisi);
     }
     const titolo = dataCorrente.toLocaleDateString('it-IT', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }).toUpperCase();
-    mostraRisultato(titolo, giorniTrovati, dataCorrente);
+    mostraRisultato(titolo, giorniTrovati, dataCorrente, usaEffetti);
 }
 
 function calcolaRetroPlanning() {
     const startVal = document.getElementById('startDate').value;
     const endVal = document.getElementById('endDateInput').value;
+    
     if (!startVal || !endVal) return;
-    let dataInizio = new Date(startVal), dataFine = new Date(endVal);
-    if (dataFine <= dataInizio) { document.getElementById('result').style.display = 'none'; return; }
+    
+    let dataInizio = new Date(startVal);
+    let dataFine = new Date(endVal);
+    
+    // Se la fine è prima dell'inizio, nascondi i risultati
+    if (dataFine <= dataInizio) { 
+        document.getElementById('result').style.display = 'none'; 
+        return; 
+    }
 
     let dataCorrente = new Date(dataInizio);
     let ggLavorativi = 0;
     registroGiorni = [];
 
+    // Ciclo che analizza ogni giorno tra le due date
     while (dataCorrente < dataFine) {
         dataCorrente.setDate(dataCorrente.getDate() + 1);
         const analisi = analizzaGiorno(new Date(dataCorrente));
+        
         if (analisi.tipo === "LAVORATIVO") {
             ggLavorativi++;
             analisi.nrGiorno = ggLavorativi;
@@ -351,6 +394,8 @@ function calcolaRetroPlanning() {
         }
         registroGiorni.push(analisi);
     }
+    
+    // Mostra il risultato usando la funzione globale
     mostraRisultato(`${ggLavorativi} GIORNI`, ggLavorativi, dataFine);
 }
 
@@ -421,50 +466,34 @@ function aggiornaBadgeFerie() {
    4. INTERFACCIA E COPIA
    ========================================= */
 
-function mostraRisultato(titoloH2, ggLavorativi, dataRiferimento) {
-    // 1. Mostra la sezione risultati
+function mostraRisultato(titoloH2, ggLavorativi, dataRiferimento, usaEffetti = false) {    
     const resultSection = document.getElementById('result');
     resultSection.style.display = 'block';
     
     const startInput = new Date(document.getElementById('startDate').value);
     const giorniSolari = Math.ceil((dataRiferimento - startInput) / (1000 * 3600 * 24));
     
-    // 2. Inserisce i testi nelle card
     document.getElementById('endDate').innerText = titoloH2;
     document.getElementById('stat-lav').innerText = ggLavorativi;
     document.getElementById('stat-sol').innerText = giorniSolari;
 
-    // --- RESET STATO VISTE DETTAGLIATE (Novità) ---
-    // Nascondiamo i contenitori per evitare che rimangano aperti al cambio dati
+    // --- NUOVA LOGICA: RESET VISTE IN MODALITÀ OFF ---
+    // Nascondiamo i contenitori della tabella e del calendario
     document.getElementById('logContainer').style.display = 'none';
     document.getElementById('calendarContainer').style.display = 'none';
 
-    // Rimuoviamo la classe 'active' da entrambi i tasti
+    // Rimuoviamo lo stato "attivo" dai pulsanti in fondo
     document.getElementById('btnViewTable').classList.remove('active');
     document.getElementById('btnViewCal').classList.remove('active');
-    // ----------------------------------------------
+    // ------------------------------------------------
 
-    // 3. Genera i contenuti (Liste e Calendario vengono creati in background)
+    // Genera i contenuti in background
     popolaTabellaDettagli();
     disegnaCalendario();
 
-    // --- EFFETTO ATTENZIONE CON RITARDO DI 500ms ---
-    const switcher = document.querySelector('.scelta-vista-switcher');
-    if (switcher) {
-        // Rimuoviamo subito la classe per resettare lo stato dell'animazione
-        switcher.classList.remove('shake-now');
-        
-        // Impostiamo il timer per la vibrazione
-        setTimeout(() => {
-            // Forza il ricalcolo per far ripartire l'animazione
-            void switcher.offsetWidth; 
-            
-            // Fa partire la vibrazione
-            switcher.classList.add('shake-now');
-            
-            // Accompagna la vista verso i tasti se sono fuori schermo
-            switcher.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }, 500); // 500ms di attesa come richiesto
+    // --- LOGICA DI SCROLL INTELLIGENTE ---
+    if (usaEffetti) {
+        resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 }
 

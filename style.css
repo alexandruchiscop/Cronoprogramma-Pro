@@ -61,12 +61,12 @@ header h1 { font-size: 1.5rem; margin-bottom: 5px; font-weight: 700; }
 /* =========================================
    3. FORM E INPUT (SETUP)
    ========================================= */
+/* SOSTITUISCI IL VECCHIO .setup-section CON QUESTO */
 .setup-section { 
-    display: grid; 
-    /* 1fr (Input) - 50px (Reset) - 1fr (Input) */
-    grid-template-columns: 1fr 50px 1fr; 
+    display: flex; 
+    flex-direction: column; 
     gap: 15px; 
-    align-items: end; /* Allinea tutto alla base */
+    align-items: stretch;
 }
 
 .input-field label { 
@@ -127,9 +127,17 @@ input {
     border: none;
     padding: 16px;
     border-radius: 12px;
-    font-weight: 600;
+    font-weight: 700; /* Più marcato */
     cursor: pointer;
     font-size: 1rem;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2); /* Ombra blu leggera */
+    text-transform: uppercase; /* Stile più tecnico */
+    letter-spacing: 0.5px;
+}
+
+.btn-primary:active {
+    transform: scale(0.98); /* Effetto pressione */
 }
 
 /* Pulsante Sabato Lavorativo (Toggle) */
@@ -348,6 +356,52 @@ input {
     border-color: var(--danger-badge);
 }
 
+/* 1. Stile del tasto Reset */
+.btn-reset-inline {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    width: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-sub);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-reset-inline:hover {
+    background: var(--danger-bg);
+    color: var(--danger-text);
+    border-color: var(--danger-badge);
+}
+
+/* 2. Animazione di rotazione */
+.spin-animation {
+    animation: rotateReset 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes rotateReset {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(-360deg); }
+}
+
+/* 3. Fix per il telefono in orizzontale (Landscape) */
+@media (max-height: 500px) and (orientation: landscape) {
+    .setup-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* Mette gli input su due colonne pulite */
+        gap: 12px;
+    }
+    
+    header p { display: none; } /* Nasconde il sottotitolo per guadagnare spazio */
+    
+    .main-card {
+        padding: 15px;
+        margin-top: 5px;
+    }
+}
+
 /* =========================================
    5. RISULTATI (CARDS E STATS)
    ========================================= */
@@ -469,8 +523,6 @@ th:nth-child(3), td:nth-child(3) { width: 105px; }
     }
 
     /* Ordine degli elementi */
-    .setup-section > div:nth-child(1) { order: 1; } /* Inizio */
-    .setup-section > div:nth-child(3) { order: 3; } /* Durata */
     .ferie-container { order: 4; width: 100%; }
     .btn-toggle-sat { order: 5; width: 100% !important; }
     .btn-primary { order: 6; width: 100% !important; margin-top: 10px; }
@@ -504,6 +556,34 @@ th:nth-child(3), td:nth-child(3) { width: 105px; }
 
     .target-date-card { padding: 15px 10px !important; }
     .target-date-card h2 { font-size: 1.2rem !important; }
+}
+
+/* Fix per la sezione input quando lo schermo è largo o ruotato */
+@media (max-width: 900px) {
+    .setup-section {
+        display: flex;
+        flex-direction: column; /* Forza gli elementi uno sopra l'altro */
+        gap: 15px;
+        padding: 10px;
+    }
+
+    .input-field {
+        width: 100% !important; /* Forza l'input a occupare tutta la larghezza */
+    }
+
+    /* Mantieni input durata e reset affiancati ma leggibili */
+    .input-reset-group {
+        display: flex;
+        gap: 8px;
+        width: 100%;
+    }
+}
+
+/* Assicurati che il contenitore dell'app non sia troppo stretto in landscape */
+.app-wrapper {
+    max-width: 500px;
+    margin: 0 auto;
+    width: 95%;
 }
 
 /* =========================================
@@ -802,21 +882,6 @@ input:focus {
 }
 
 /* ANIMAZIONE DI VIBRAZIONE PER ATTENZIONE */
-/* Definizione dell'animazione di vibrazione */
-@keyframes shake-attention {
-    0% { transform: translateX(0); }
-    25% { transform: translateX(-4px); }
-    50% { transform: translateX(4px); }
-    75% { transform: translateX(-4px); }
-    100% { transform: translateX(0); }
-}
-
-/* Classe che applicheremo via JavaScript */
-.shake-now {
-    animation: shake-attention 0.4s ease-in-out;
-    border-color: var(--primary) !important; /* Diventa blu per un attimo */
-    box-shadow: 0 0 15px rgba(37, 99, 235, 0.2);
-}
 
 /* Stato attivo del tasto (quando selezionato) */
 .view-btn.active {
