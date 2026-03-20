@@ -159,7 +159,33 @@
         </section>
     </div>
 
+<button id="btnFeedback" class="btn-feedback-float" title="Invia un suggerimento">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+</button>
+
+<div id="feedbackModal" class="modal-overlay" style="display:none;">
+    <div class="modal-card">
+        <div id="feedbackForm">
+            <h3>💡 Suggerimenti & Feedback</h3>
+            <p>Aiutami a migliorare questo tool. Scrivi qui sotto i tuoi consigli o bug riscontrati.</p>
+            <textarea id="feedbackText" placeholder="La tua nota..."></textarea>
+            <div class="modal-footer">
+                <button id="closeFeedback" class="btn-cancel">Annulla</button>
+                <button id="sendFeedback" class="btn-send">Invia Nota</button>
+            </div>
+        </div>
+
+        <div id="feedbackSuccess" style="display:none; text-align: center; padding: 20px;">
+            <div style="font-size: 50px; margin-bottom: 20px;">✅</div>
+            <h3 style="color: #059669;">Nota Inviata!</h3>
+            <p>Grazie per il tuo contributo. Il tuo suggerimento è stato registrato.</p>
+            <button onclick="chiudiModalFeedback()" class="btn-send" style="margin-top: 20px; width: 100%;">Ho capito</button>
+        </div>
+    </div>
+</div>
+
     <script src="access.js"></script>
     <script src="script.js"></script>
+    <script src="feedback.js"></script>
 </body>
 </html>
