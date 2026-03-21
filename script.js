@@ -682,31 +682,33 @@ function chiudiPrintModal() {
 function eseguiStampa(tipo) {
     const modal = document.getElementById('printModal');
 
-    // 1. FIX FONDAMENTALE: Usiamo il nome corretto della tua funzione
-    // Questo genera i dati (registroGiorni) se non l'avevi ancora fatto
+    // 1. GENERIAMO I DATI (Fondamentale per non avere fogli bianchi)
     if (typeof eseguiCalcoloCorretto === "function") {
         eseguiCalcoloCorretto();
     }
 
-    // 2. RIGENERIAMO I CONTENUTI (Tabella e Calendario)
-    // Così siamo sicuri che il DOM sia pieno di dati prima di stampare
+    // 2. RIEMPIAMO FISICAMENTE I CONTENITORI
     popolaTabellaDettagli();
     disegnaCalendario();
 
-    // 3. PULIZIA CLASSI PRECEDENTI
+    // 3. PULIZIA CLASSI
     document.body.classList.remove('print-only-list', 'print-only-cal');
 
-    // 4. LOGICA DI ESCLUSIONE (Sincronizzata con il CSS)
+    // 4. LOGICA DI ESCLUSIONE (Corretta per il tuo CSS)
     if (tipo === 'solo-lista') {
-        document.body.classList.add('print-only-cal'); // Nasconde il calendario
+        // Il tuo CSS dice: body.print-only-list { #calendarContainer { display: none } }
+        // Quindi per vedere SOLO la lista, attiviamo questa:
+        document.body.classList.add('print-only-list');
     } else if (tipo === 'solo-cal') {
-        document.body.classList.add('print-only-list'); // Nasconde la lista
+        // Il tuo CSS dice: body.print-only-cal { #logContainer { display: none } }
+        // Quindi per vedere SOLO il calendario, attiviamo questa:
+        document.body.classList.add('print-only-cal');
     }
 
     // 5. CHIUDIAMO IL MODAL
     if (modal) modal.style.display = 'none';
 
-    // 6. LANCIO STAMPA (Ottimizzato Safari)
+    // 6. LANCIO STAMPA (Compatibile Brave/Safari/Chrome)
     requestAnimationFrame(() => {
         requestAnimationFrame(() => {
             window.print();
