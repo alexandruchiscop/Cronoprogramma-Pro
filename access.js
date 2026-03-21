@@ -20,41 +20,57 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function validaAccesso() {
-    const input = document.getElementById('passInput');
+    const inputUser = document.getElementById('userInput'); // Nuovo campo
+    const inputPass = document.getElementById('passInput');
     const errore = document.getElementById('lockError');
-    const loading = document.getElementById('loadingAccess'); // Riferimento barra
-    const pass = input.value;
+    const loading = document.getElementById('loadingAccess');
+    
+    const user = inputUser.value.trim();
+    const pass = inputPass.value.trim();
 
-    if (!pass) return;
+    if (!user || !pass) {
+        alert("Inserisci sia Nome Utente che Password");
+        return;
+    }
 
     // UI: Stato di caricamento
-    input.disabled = true;
+    inputUser.disabled = true;
+    inputPass.disabled = true;
     errore.style.display = 'none';
-    loading.style.display = 'block'; // MOSTRA LA BARRA
+    loading.style.display = 'block';
 
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     const dispositivo = isMobile ? "Smartphone/Tablet" : "Computer (PC/Mac)";
 
     try {
-        // FIX SICUREZZA: password nel body POST, non nell'URL.
-        // Così non appare nella history del browser né nei log del server.
-        // NOTA: aggiorna anche il tuo Google Apps Script per gestire doPost(e).
         const response = await fetch(URL_SCRIPT_GOOGLE, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ pass: pass, dev: dispositivo })
+            // Inviamo sia 'user' che 'pass' e indichiamo l'azione 'login'
+            body: JSON.stringify({ 
+                action: 'login',
+                user: user, 
+                pass: pass, 
+                dev: dispositivo 
+            })
         });
         const result = await response.json();
 
         if (result.status === "autorizzato") {
+            // SALVIAMO IL NOME UTENTE LOCALMENTE PER USARLO NEI FEEDBACK
+            localStorage.setItem('utente_nome', user);
             sbloccaSito();
         } else {
-            loading.style.display = 'none'; // NASCONDI LA BARRA
+            loading.style.display = 'none';
+            inputUser.disabled = false;
+            inputPass.disabled = false;
             mostraErrore();
         }
     } catch (err) {
         console.error("Errore:", err);
-        loading.style.display = 'none'; // NASCONDI LA BARRA
+        loading.style.display = 'none';
+        inputUser.disabled = false;
+        inputPass.disabled = false;
         mostraErrore();
     }
 }
