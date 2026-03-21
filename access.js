@@ -1,7 +1,7 @@
 /**
  * ACCESS.JS - Gestione Sicurezza Ottimizzata
  */
-const URL_SCRIPT_GOOGLE = "https://script.google.com/macros/s/AKfycbwAskL3ggJ3zsWAyCFyZEJku8j4uaV1zHRC-MbMjZiC1kFzEPdz20KhRtnzV9zZRtTlMQ/exec";
+const URL_SCRIPT_GOOGLE = "https://script.google.com/macros/s/AKfycbxG-iJ2r8WtbN4Mhgw5Z5q0PZGjURzeUhk-VF1H7U7EAAdvyE6pdlMZ0ug2dJSwloQC9A/exec";
 
 document.addEventListener('DOMContentLoaded', () => {
     const btn = document.getElementById('btnUnlock');
