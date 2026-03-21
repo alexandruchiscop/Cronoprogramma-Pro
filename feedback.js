@@ -8,29 +8,34 @@ document.addEventListener('DOMContentLoaded', () => {
     // Apre il modal
     btnOpen.addEventListener('click', () => {
         modal.style.display = 'flex';
-        document.body.style.overflow = 'hidden'; // <--- BLOCCA LO SCROLL
+        document.body.style.overflow = 'hidden'; 
         textarea.focus();
     });
 
-    // Chiude il modal
     btnClose.addEventListener('click', () => { chiudiModalFeedback(); });
 
     // Invia i dati a Google
     btnSend.addEventListener('click', async () => {
         const msg = textarea.value.trim();
-        const userPass = document.getElementById('passInput')?.value || "Utente_Loggato";
-
+        
+        // RECUPERIAMO IL NOME SALVATO DURANTE IL LOGIN (da access.js)
+        const activeUser = localStorage.getItem('utente_nome') || "Utente_Ignoto";
+        
         if (!msg) return alert("Scrivi un messaggio!");
 
         btnSend.disabled = true;
         btnSend.innerText = "Invio...";
 
         try {
-            // URL_SCRIPT_GOOGLE deve essere definita in access.js
+            // NOTA: Abbiamo rimosso 'mode: no-cors' per poter leggere la risposta se serve
+            // e ora inviamo 'action' e 'user' (il nome utente)
             await fetch(URL_SCRIPT_GOOGLE, {
                 method: 'POST',
-                mode: 'no-cors',
-                body: JSON.stringify({ user: userPass, message: msg })
+                body: JSON.stringify({ 
+                    action: 'feedback', // Comunica allo script cosa stiamo facendo
+                    user: activeUser,   // Invia il NOME UTENTE, non la password
+                    message: msg 
+                })
             });
 
             // Mostra schermata successo
@@ -38,17 +43,18 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('feedbackSuccess').style.display = 'block';
             textarea.value = "";
         } catch (e) {
+            console.error("Errore invio:", e);
             alert("Errore nell'invio. Riprova.");
+        } finally {
             btnSend.disabled = false;
             btnSend.innerText = "Invia Nota";
         }
     });
 });
 
-// Funzione per chiudere e resettare
 function chiudiModalFeedback() {
     document.getElementById('feedbackModal').style.display = 'none';
-    document.body.style.overflow = ''; // <--- RIPRISTINA LO SCROLL
+    document.body.style.overflow = ''; 
     document.getElementById('feedbackForm').style.display = 'block';
     document.getElementById('feedbackSuccess').style.display = 'none';
 }
