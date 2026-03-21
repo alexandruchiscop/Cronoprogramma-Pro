@@ -232,20 +232,18 @@ function calcolaPasqua(anno) {
     const b = Math.floor(anno / 100);
     const c = anno % 4;
     const d = Math.floor(b / 4);
-    const e = b % 4;
-    const f = Math.floor((b + 8) / 25);
-    const g = Math.floor((b - f + 1) / 3);
-    const h = (19 * a + b - d - g + 15) % 30;
-    const i = Math.floor(c / 4);
-    const k = c % 4;
-    const l = (32 + 2 * e + 2 * i - h - k) % 7;
-    const m = Math.floor((a + 11 * h + 22 * l) / 451);
+    const e = Math.floor((b + 8) / 25);
+    const f = Math.floor((b - d + 1) / 3);
+    const g = (19 * a + b - d - e + f + 15) % 30;
+    const h = anno % 7;
+    const i = Math.floor((a + 11 * g) / 319);
     
-    // Il calcolo finale che determina mese e giorno
-    const n = h + l - 7 * m + 114;
-    const mese = Math.floor(n / 31);
-    const giorno = (n % 31) + 1;
-
+    // Ecco la J corretta per il calendario moderno
+    const j = (2 * (anno % 4) + 4 * (Math.floor(anno / 4) % 7) + 6 * g + h - i + 32) % 7;
+    
+    const mese = Math.floor((g - i + j + 114) / 31);
+    const giorno = ((g - i + j + 114) % 31) + 1;
+    
     return new Date(anno, mese - 1, giorno);
 }
 
