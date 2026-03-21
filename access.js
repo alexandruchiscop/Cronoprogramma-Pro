@@ -1,47 +1,31 @@
 /**
- * ACCESS.JS - Gestione Sicurezza Ottimizzata
+ * ACCESS.JS - Gestione Sicurezza Ottimizzata (Versione Pulita)
  */
 const URL_SCRIPT_GOOGLE = "https://script.google.com/macros/s/AKfycbxSjRnOkHy6Ht2aOj-h74XUTCCH3Ha8jJV1L3NUTRujJcs66M1dDyhQJvp9o5aYimTj5g/exec";
 
 document.addEventListener('DOMContentLoaded', () => {
     const btn = document.getElementById('btnUnlock');
-    const input = document.getElementById('passInput');
+    const inputPass = document.getElementById('passInput');
+    const inputUser = document.getElementById('userInput');
 
-    // Estendiamo la sessione a 24 ore (86400000 ms) per non dover loggare continuamente
+    // Controllo sessione esistente (24h)
     const sessione = localStorage.getItem('cronoprogramma_auth');
     if (sessione && (Date.now() - sessione < 86400000)) {
         document.getElementById('lockScreen').style.display = 'none';
     }
 
     btn.addEventListener('click', validaAccesso);
-    input.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') validaAccesso();
-    });
-});
-
-/**
- * ACCESS.JS - Gestione Sicurezza Ottimizzata
- */
-const URL_SCRIPT_GOOGLE = "https://script.google.com/macros/s/AKfycbxSjRnOkHy6Ht2aOj-h74XUTCCH3Ha8jJV1L3NUTRujJcs66M1dDyhQJvp9o5aYimTj5g/exec";
-
-document.addEventListener('DOMContentLoaded', () => {
-    const btn = document.getElementById('btnUnlock');
-    const input = document.getElementById('passInput');
-
-    // Estendiamo la sessione a 24 ore (86400000 ms) per non dover loggare continuamente
-    const sessione = localStorage.getItem('cronoprogramma_auth');
-    if (sessione && (Date.now() - sessione < 86400000)) {
-        document.getElementById('lockScreen').style.display = 'none';
-    }
-
-    btn.addEventListener('click', validaAccesso);
-    input.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') validaAccesso();
+    
+    // Permette di premere Invio in entrambi i campi
+    [inputPass, inputUser].forEach(el => {
+        if(el) el.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') validaAccesso();
+        });
     });
 });
 
 async function validaAccesso() {
-    const inputUser = document.getElementById('userInput'); // Nuovo campo
+    const inputUser = document.getElementById('userInput');
     const inputPass = document.getElementById('passInput');
     const errore = document.getElementById('lockError');
     const loading = document.getElementById('loadingAccess');
@@ -64,24 +48,26 @@ async function validaAccesso() {
     const dispositivo = isMobile ? "Smartphone/Tablet" : "Computer (PC/Mac)";
 
     try {
-       const response = await fetch(URL_SCRIPT_GOOGLE, {
-    method: 'POST', // Deve essere POST
-    mode: 'cors',   // Aggiungi esplicitamente questo
-    cache: 'no-cache',
-    headers: {
-        'Content-Type': 'text/plain;charset=utf-8', // Google Apps Script preferisce questo per evitare blocchi CORS
-    },
-    body: JSON.stringify({ 
-        action: 'login', 
-        user: user, 
-        pass: pass, 
-        dev: dispositivo 
-    })
-});
-        const result = await response.json();
+        const response = await fetch(URL_SCRIPT_GOOGLE, {
+            method: 'POST',
+            mode: 'cors', 
+            headers: {
+                // Usiamo text/plain per evitare il blocco CORS dei browser
+                'Content-Type': 'text/plain;charset=utf-8' 
+            },
+            body: JSON.stringify({ 
+                action: 'login', 
+                user: user, 
+                pass: pass, 
+                dev: dispositivo 
+            })
+        });
+
+        // Leggiamo come testo e poi convertiamo in JSON (più sicuro per Google Apps Script)
+        const text = await response.text();
+        const result = JSON.parse(text);
 
         if (result.status === "autorizzato") {
-            // SALVIAMO IL NOME UTENTE LOCALMENTE PER USARLO NEI FEEDBACK
             localStorage.setItem('utente_nome', user);
             sbloccaSito();
         } else {
@@ -91,11 +77,12 @@ async function validaAccesso() {
             mostraErrore();
         }
     } catch (err) {
-        console.error("Errore:", err);
+        console.error("Errore connessione:", err);
         loading.style.display = 'none';
         inputUser.disabled = false;
         inputPass.disabled = false;
         mostraErrore();
+        alert("Errore di connessione. Assicurati che lo script sia pubblicato come 'Chiunque'.");
     }
 }
 
@@ -104,47 +91,21 @@ function sbloccaSito() {
     overlay.style.transition = 'opacity 0.4s ease-out';
     overlay.style.opacity = '0';
     
-    // Salviamo il timestamp del login
     localStorage.setItem('cronoprogramma_auth', Date.now());
     
-    // Rimuoviamo l'elemento dal DOM dopo l'animazione
     setTimeout(() => {
         overlay.style.display = 'none';
     }, 400);
 }
 
 function mostraErrore() {
-    const input = document.getElementById('passInput');
+    const inputPass = document.getElementById('passInput');
     const errore = document.getElementById('lockError');
     
     errore.style.display = 'block';
-    input.disabled = false;
-    input.value = "";
-    input.placeholder = "Riprova...";
-    input.focus(); // Riporta il focus per scrivere subito
-}
-
-function sbloccaSito() {
-    const overlay = document.getElementById('lockScreen');
-    overlay.style.transition = 'opacity 0.4s ease-out';
-    overlay.style.opacity = '0';
-    
-    // Salviamo il timestamp del login
-    localStorage.setItem('cronoprogramma_auth', Date.now());
-    
-    // Rimuoviamo l'elemento dal DOM dopo l'animazione
-    setTimeout(() => {
-        overlay.style.display = 'none';
-    }, 400);
-}
-
-function mostraErrore() {
-    const input = document.getElementById('passInput');
-    const errore = document.getElementById('lockError');
-    
-    errore.style.display = 'block';
-    input.disabled = false;
-    input.value = "";
-    input.placeholder = "Riprova...";
-    input.focus(); // Riporta il focus per scrivere subito
+    inputPass.disabled = false;
+    document.getElementById('userInput').disabled = false;
+    inputPass.value = "";
+    inputPass.placeholder = "Riprova...";
+    inputPass.focus();
 }
