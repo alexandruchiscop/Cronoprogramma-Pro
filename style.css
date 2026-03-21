@@ -303,6 +303,7 @@ input {
         padding: 0 !important;
     }
 
+   
     /* 3. LOGICA DI STAMPA DINAMICA */
     /* Stampiamo solo ciò che è visibile a schermo, a meno che non usiamo il tasto "Stampa Tutto" */
     #result { display: block !important; }
@@ -1247,3 +1248,59 @@ input:focus {
     100% { transform: translateX(300%); }
 }
 
+/* =========================================
+   12. MODAL SCELTA STAMPA (PDF)
+   ========================================= */
+
+/* Sfondo scuro che copre tutto */
+#printModal.modal-overlay {
+    z-index: 10002; /* Un livello sopra il feedback per sicurezza */
+}
+
+/* Contenitore dei bottoni dentro il modal di stampa */
+.print-options-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 20px;
+    width: 100%;
+}
+
+/* Bottoni interni al modal */
+.btn-modal-print {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* Stile per le opzioni singole (Lista o Calendario) */
+.btn-print-single {
+    background: var(--primary-light);
+    color: var(--primary);
+    border: 1px solid var(--primary);
+}
+
+/* Stile per l'opzione "Entrambi" */
+.btn-print-all-modal {
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+}
+
+.btn-modal-print:hover {
+    transform: translateY(-2px);
+    filter: brightness(0.95);
+}
+
+.btn-modal-print:active {
+    transform: translateY(0);
+}
