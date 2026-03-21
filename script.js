@@ -287,30 +287,31 @@ function analizzaGiorno(data) {
         }
     }
 
-   const pasqua = calcolaPasqua(anno);
+   // --- CALCOLO PASQUA E PASQUETTA ---
+    const pasqua = calcolaPasqua(anno);
     const pasquetta = new Date(pasqua);
     pasquetta.setDate(pasqua.getDate() + 1);
-    
-    const dIso = data.toISOString().split('T')[0];
-    const pIso = pasqua.toISOString().split('T')[0];
-    const pqIso = pasquetta.toISOString().split('T')[0];
+
+    // Trasformiamo tutto in timestamp (millisecondi) per un confronto matematico perfetto
+    const tData = new Date(data.getFullYear(), data.getMonth(), data.getDate()).getTime();
+    const tPasqua = new Date(pasqua.getFullYear(), pasqua.getMonth(), pasqua.getDate()).getTime();
+    const tPasquetta = new Date(pasquetta.getFullYear(), pasquetta.getMonth(), pasquetta.getDate()).getTime();
 
     // 1. Priorità assoluta: Feste (Pasqua, Pasquetta e Feste Fisse)
-    if (dIso === pIso || dIso === pqIso || FESTE_FISSE.includes(tagFesta)) {
+    if (tData === tPasqua || tData === tPasquetta || FESTE_FISSE.includes(tagFesta)) {
         return { data: dataFormattata, tipo: "FESTA", classe: "row-festa" };
     }
 
-    // 2. Weekend (assegniamo "row-festa" per avere il colore rosso)
+    // 2. Weekend
     if (data.getDay() === 0) { // Domenica
         return { data: dataFormattata, tipo: "WEEKEND", classe: "row-festa" };
     }
-    if (data.getDay() === 6 && !sabatoLavorativo) { // Sabato (se non lavorativo)
+    if (data.getDay() === 6 && !sabatoLavorativo) { // Sabato
         return { data: dataFormattata, tipo: "WEEKEND", classe: "row-festa" };
     }
     
     // 3. Altrimenti è lavorativo
     return { data: dataFormattata, tipo: "LAVORATIVO", classe: "row-lavorativo" };
-}
 
 // Funzione per il click sul nuovo bottone
 function togglePatrono() {
