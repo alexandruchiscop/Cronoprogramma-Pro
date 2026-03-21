@@ -671,6 +671,28 @@ function confermaCopia() {
     setTimeout(() => { btn.innerText = tOriginale; btn.style.backgroundColor = ""; }, 2000);
 }
 
+function stampaTutto() {
+    const cal = document.getElementById('calendarContainer');
+    const log = document.getElementById('logContainer');
+    
+    // Memorizziamo come sono adesso (visibili o nascosti)
+    const calWasVisible = cal.style.display;
+    const logWasVisible = log.style.display;
+
+    // Li mostriamo entrambi
+    cal.style.display = 'block';
+    log.style.display = 'block';
+
+    // Lanciamo la stampa
+    window.print();
+
+    // Dopo la stampa (o chiusura finestra), ripristiniamo la vista originale
+    setTimeout(() => {
+        cal.style.display = calWasVisible;
+        log.style.display = logWasVisible;
+    }, 500);
+}
+
 /* =========================================
    5. LISTENERS PER AGGIORNAMENTO AUTOMATICO
    ========================================= */
