@@ -1,5 +1,5 @@
 /**
- * ACCESS.JS - Gestione Sicurezza tramite Whitelist Google Sheets
+ * ACCESS.JS - Gestione Sicurezza Ottimizzata
  */
 const URL_SCRIPT_GOOGLE = "https://script.google.com/macros/s/AKfycbytxrj0mCSIaNjJ0wkNXzs6aiuDgeR7XLQ5gyozz0osNVE5bwzW-AmUfTy-DwZdSCI5pA/exec";
 
@@ -7,16 +7,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const btn = document.getElementById('btnUnlock');
     const input = document.getElementById('passInput');
 
-    // Controllo se l'utente è già loggato (opzionale, dura 1 ora)
+    // Estendiamo la sessione a 24 ore (86400000 ms) per non dover loggare continuamente
     const sessione = localStorage.getItem('cronoprogramma_auth');
-    if (sessione && (Date.now() - sessione < 3600000)) {
+    if (sessione && (Date.now() - sessione < 86400000)) {
         document.getElementById('lockScreen').style.display = 'none';
     }
 
-    // Evento click
     btn.addEventListener('click', validaAccesso);
-
-    // Evento tasto Invio
     input.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') validaAccesso();
     });
@@ -29,24 +26,22 @@ async function validaAccesso() {
 
     if (!pass) return;
 
-    // Stato di caricamento
+    // UI: Feedback immediato di caricamento
     input.disabled = true;
-    input.placeholder = "Verifica...";
+    input.placeholder = "Verifica in corso...";
+    errore.style.display = 'none';
 
     try {
-        const response = await fetch(URL_SCRIPT_GOOGLE, {
-            method: 'POST',
-            mode: 'no-cors', // Necessario per Apps Script a volte
-            body: JSON.stringify({ password: pass })
-        });
-
-        // NOTA: Poiché Google Apps Script con 'no-cors' non restituisce il JSON leggibile facilmente,
-        // la soluzione più robusta è usare il metodo standard. Se hai errori CORS,
-        // useremo una piccola modifica allo script di Google.
+        /* OTTIMIZZAZIONE: 
+           Inviamo una singola richiesta GET. Le GET su Google Apps Script 
+           sono generalmente più veloci e gestiscono meglio il reindirizzamento
+           necessario per leggere la risposta JSON.
+        */
+        const response = await fetch(`${URL_SCRIPT_GOOGLE}?pass=${encodeURIComponent(pass)}`);
         
-        // Simuliamo la risposta positiva del server (per test) o integriamo fetch standard:
-        const check = await fetch(URL_SCRIPT_GOOGLE + "?pass=" + encodeURIComponent(pass));
-        const result = await check.json();
+        if (!response.ok) throw new Error("Errore di rete");
+
+        const result = await response.json();
 
         if (result.status === "autorizzato") {
             sbloccaSito();
@@ -55,24 +50,32 @@ async function validaAccesso() {
         }
     } catch (err) {
         console.error("Errore autenticazione:", err);
-        // Se il server non risponde, per sicurezza non sblocchiamo
+        // Se il server è offline o c'è un errore, resettiamo l'input per riprovare
         mostraErrore();
     }
 }
 
 function sbloccaSito() {
     const overlay = document.getElementById('lockScreen');
-    overlay.style.transition = 'opacity 0.5s';
+    overlay.style.transition = 'opacity 0.4s ease-out';
     overlay.style.opacity = '0';
+    
+    // Salviamo il timestamp del login
     localStorage.setItem('cronoprogramma_auth', Date.now());
-    setTimeout(() => overlay.style.display = 'none', 500);
+    
+    // Rimuoviamo l'elemento dal DOM dopo l'animazione
+    setTimeout(() => {
+        overlay.style.display = 'none';
+    }, 400);
 }
 
 function mostraErrore() {
     const input = document.getElementById('passInput');
     const errore = document.getElementById('lockError');
+    
     errore.style.display = 'block';
     input.disabled = false;
     input.value = "";
-    input.placeholder = "Password errata!";
+    input.placeholder = "Riprova...";
+    input.focus(); // Riporta il focus per scrivere subito
 }
