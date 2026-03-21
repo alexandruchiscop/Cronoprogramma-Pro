@@ -1,7 +1,6 @@
 /* =========================================
    1. CONFIGURAZIONE E STATO
    ========================================= */
-
 const FESTE_FISSE = ["01-01", "06-01", "25-04", "01-05", "02-06", "15-08", "01-11", "08-12", "25-12", "26-12"];
 let registroGiorni = [];
 let sabatoLavorativo = localStorage.getItem('sabatoLavorativo') === 'true';
@@ -232,7 +231,7 @@ function calcolaPasqua(anno) {
     // Algoritmo di Meeus/Jones/Butcher (Universale)
     const a = anno % 19;
     const b = Math.floor(anno / 100);
-    const c = anno % 4;
+    const c = anno % 100; // FIX: ultime due cifre dell'anno (era erroneamente anno % 4)
     const d = Math.floor(b / 4);
     const e = b % 4;
     const f = Math.floor((b + 8) / 25);
