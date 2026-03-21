@@ -36,7 +36,7 @@ async function validaAccesso() {
 
     try {
         // Inviamo anche il parametro &dev
-        const response = await fetch(`${URL_SCRIPT_GOOGLE}?pass=${encodeURIComponent(pass)}&dev=${encodeURIComponent(dispositivo)}`);
+        const response = await fetch(`${https://script.google.com/macros/s/AKfycbxG-iJ2r8WtbN4Mhgw5Z5q0PZGjURzeUhk-VF1H7U7EAAdvyE6pdlMZ0ug2dJSwloQC9A/exec}?pass=${encodeURIComponent(pass)}&dev=${encodeURIComponent(dispositivo)}`);
         const result = await response.json();
 
         if (result.status === "autorizzato") {
