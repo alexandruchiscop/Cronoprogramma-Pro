@@ -682,38 +682,37 @@ function chiudiPrintModal() {
 function eseguiStampa(tipo) {
     const modal = document.getElementById('printModal');
 
-    // 1. GENERIAMO I DATI (Fondamentale per non avere fogli bianchi)
+    // 1. Rigeneriamo i dati per sicurezza
     if (typeof eseguiCalcoloCorretto === "function") {
         eseguiCalcoloCorretto();
     }
 
-    // 2. RIEMPIAMO FISICAMENTE I CONTENITORI
+    // 2. Forza il riempimento HTML dei contenitori
     popolaTabellaDettagli();
     disegnaCalendario();
 
-    // 3. PULIZIA CLASSI
+    // 3. Reset totale delle classi sul body
     document.body.classList.remove('print-only-list', 'print-only-cal');
 
-    // 4. LOGICA DI ESCLUSIONE (Corretta per il tuo CSS)
+    // 4. APPLICAZIONE LOGICA INVERSA (Quella che comanda il tuo CSS)
     if (tipo === 'solo-lista') {
-        // Il tuo CSS dice: body.print-only-list { #calendarContainer { display: none } }
-        // Quindi per vedere SOLO la lista, attiviamo questa:
+        // Per vedere SOLO la lista, attiviamo la classe che NASCONDE il calendario
         document.body.classList.add('print-only-list');
     } else if (tipo === 'solo-cal') {
-        // Il tuo CSS dice: body.print-only-cal { #logContainer { display: none } }
-        // Quindi per vedere SOLO il calendario, attiviamo questa:
+        // Per vedere SOLO il calendario, attiviamo la classe che NASCONDE il log/lista
         document.body.classList.add('print-only-cal');
     }
+    // Se tipo è 'entrambi', non aggiungiamo classi e il CSS mostra tutto
 
-    // 5. CHIUDIAMO IL MODAL
+    // 5. Gestione Modal
     if (modal) modal.style.display = 'none';
 
-    // 6. LANCIO STAMPA (Compatibile Brave/Safari/Chrome)
+    // 6. Stampa (Ottimizzata per Safari/Brave/Chrome)
     requestAnimationFrame(() => {
         requestAnimationFrame(() => {
             window.print();
             
-            // 7. RIPRISTINO
+            // 7. Ripristino immediato dopo il comando di stampa
             document.body.classList.remove('print-only-list', 'print-only-cal');
         });
     });
