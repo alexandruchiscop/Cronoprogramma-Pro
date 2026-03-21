@@ -114,9 +114,8 @@
                     <span class="label" id="resultLabel">CONSEGNA PREVISTA</span>
                     <h2 id="endDate"></h2>
                     <div class="action-buttons">
-                        <button onclick="window.print()" class="btn-print" title="Stampa quello che vedi ora">Stampa Vista</button>
-                        <button onclick="stampaTutto()" class="btn-print" style="background: #0f172a;">Stampa Tutto (PDF)</button>
-                        <button onclick="copiaRisultato()" class="btn-copy">Copia Testo</button>
+                        <button onclick="apriPrintModal()" class="btn-print">Stampa / Salva PDF</button>
+                        <button onclick="copiaRisultato()" class="btn-copy">Copia Riepilogo</button>
                     </div>
             </div>
 
@@ -186,7 +185,18 @@
         </div>
     </div>
 </div>
-
+<div id="printModal" class="modal-overlay" style="display:none; z-index: 9999;">
+    <div class="modal-card">
+        <h3>🖨️ Opzioni di Stampa</h3>
+        <p>Cosa vuoi includere nel tuo PDF?</p>
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px;">
+            <button onclick="eseguiStampa('solo-lista')" class="btn-primary" style="background: #475569;">Solo Lista Dettagliata</button>
+            <button onclick="eseguiStampa('solo-cal')" class="btn-primary" style="background: #475569;">Solo Vista Calendario</button>
+            <button onclick="eseguiStampa('entrambi')" class="btn-primary">Entrambi (Lista + Calendario)</button>
+            <button onclick="chiudiPrintModal()" class="btn-cancel" style="margin-top: 10px;">Annulla</button>
+        </div>
+    </div>
+</div>
     <script src="access.js"></script>
     <script src="script.js"></script>
     <script src="feedback.js"></script>
