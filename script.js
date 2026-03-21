@@ -321,13 +321,19 @@ function calcolaCronoprogramma(usaEffetti = false) {
     const daysInput = parseInt(document.getElementById('days').value);
     if (!startInput || isNaN(daysInput) || daysInput <= 0) return;
 
+    // Usiamo T00:00:00 per bloccare il fuso orario
     let dataCorrente = new Date(startInput + "T00:00:00");
     let giorniTrovati = 0;
     registroGiorni = []; 
 
+    // Partiamo dal giorno STESSO o dal giorno DOPO? 
+    // Di solito il cronoprogramma conta dal giorno successivo all'inizio
     while (giorniTrovati < daysInput) {
-        dataCorrente.setDate(dataCorrente.getDate() + 1);
-        const analisi = analizzaGiorno(new Date(dataCorrente));
+        dataCorrente.setDate(dataCorrente.getDate() + 1); // Sposta al giorno da analizzare
+        
+        // Creiamo una copia pulita per l'analisi
+        const dataDaAnalizzare = new Date(dataCorrente.getFullYear(), dataCorrente.getMonth(), dataCorrente.getDate());
+        const analisi = analizzaGiorno(dataDaAnalizzare);
         
         if (analisi.tipo === "LAVORATIVO") {
             giorniTrovati++;
@@ -347,10 +353,9 @@ function calcolaRetroPlanning() {
     
     if (!startVal || !endVal) return;
     
-   let dataInizio = new Date(startVal + "T00:00:00");
-   let dataFine = new Date(endVal + "T00:00:00");
+    let dataInizio = new Date(startVal + "T00:00:00");
+    let dataFine = new Date(endVal + "T00:00:00");
     
-    // Se la fine è prima dell'inizio, nascondi i risultati
     if (dataFine <= dataInizio) { 
         document.getElementById('result').style.display = 'none'; 
         return; 
@@ -360,10 +365,12 @@ function calcolaRetroPlanning() {
     let ggLavorativi = 0;
     registroGiorni = [];
 
-    // Ciclo che analizza ogni giorno tra le due date
     while (dataCorrente < dataFine) {
         dataCorrente.setDate(dataCorrente.getDate() + 1);
-        const analisi = analizzaGiorno(new Date(dataCorrente));
+        
+        // Copia pulita dell'oggetto data
+        const dataDaAnalizzare = new Date(dataCorrente.getFullYear(), dataCorrente.getMonth(), dataCorrente.getDate());
+        const analisi = analizzaGiorno(dataDaAnalizzare);
         
         if (analisi.tipo === "LAVORATIVO") {
             ggLavorativi++;
@@ -374,7 +381,6 @@ function calcolaRetroPlanning() {
         registroGiorni.push(analisi);
     }
     
-    // Mostra il risultato usando la funzione globale
     mostraRisultato(`${ggLavorativi} GIORNI`, ggLavorativi, dataFine);
 }
 
