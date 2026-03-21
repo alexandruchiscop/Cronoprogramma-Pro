@@ -247,55 +247,39 @@ function analizzaGiorno(data) {
     const pGiorno = parseInt(document.getElementById('patronoGiorno').value);
     const pMese = parseInt(document.getElementById('patronoMese').value);
 
-   if (patronoAttivo && gg === pGiorno && mm === pMese) {
+    if (patronoAttivo && gg === pGiorno && mm === pMese) {
         return { data: dataFormattata, tipo: "PATRONO", classe: "row-festa" };
     }
 
-    const periodiSosp = document.querySelectorAll('.periodo-item');
-    const dataControllo = new Date(data);
-    dataControllo.setHours(0, 0, 0, 0);
+    // Creiamo un timestamp "pulito" (mezzanotte locale) per il giorno in analisi
+    const tData = new Date(data.getFullYear(), data.getMonth(), data.getDate(), 0, 0, 0, 0).getTime();
 
+    // --- CONTROLLO SOSPENSIONI ---
+    const periodiSosp = document.querySelectorAll('.periodo-item');
     for (let p of periodiSosp) {
         const startInput = p.querySelector('.f-start');
         const endInput = p.querySelector('.f-end');
-        const wrapper = p.closest('.periodo-wrapper');
-        const errorMsg = wrapper ? wrapper.querySelector('.error-msg') : null;
-        
         const sVal = startInput.value;
         const eVal = endInput.value;
         
         if (sVal && eVal) {
-            const dInizio = new Date(sVal);
-            const dFine = new Date(eVal);
-            dInizio.setHours(0, 0, 0, 0);
-            dFine.setHours(0, 0, 0, 0);
+            // Aggiungiamo T00:00:00 per forzare la data locale corretta
+            const dInizio = new Date(sVal + "T00:00:00").getTime();
+            const dFine = new Date(eVal + "T00:00:00").getTime();
 
-            if (dFine < dInizio) {
-                startInput.classList.add('input-error');
-                endInput.classList.add('input-error');
-                if (errorMsg) errorMsg.style.display = 'block';
-                continue; 
-            } else {
-                startInput.classList.remove('input-error');
-                endInput.classList.remove('input-error');
-                if (errorMsg) errorMsg.style.display = 'none';
-            }
-
-            if (dataControllo >= dInizio && dataControllo <= dFine) {
-                return { data: dataFormattata, tipo: "SOSP.", classe: "row-festa" };
+            if (dFine >= dInizio) {
+                if (tData >= dInizio && tData <= dFine) {
+                    return { data: dataFormattata, tipo: "SOSP.", classe: "row-festa" };
+                }
             }
         }
     }
 
-   // --- CALCOLO PASQUA E PASQUETTA ---
+    // --- CALCOLO PASQUA E PASQUETTA ---
     const pasqua = calcolaPasqua(anno);
-    const pasquetta = new Date(pasqua);
-    pasquetta.setDate(pasqua.getDate() + 1);
-
-    // Trasformiamo tutto in timestamp (millisecondi) per un confronto matematico perfetto
-    const tData = new Date(data.getFullYear(), data.getMonth(), data.getDate()).getTime();
-    const tPasqua = new Date(pasqua.getFullYear(), pasqua.getMonth(), pasqua.getDate()).getTime();
-    const tPasquetta = new Date(pasquetta.getFullYear(), pasquetta.getMonth(), pasquetta.getDate()).getTime();
+    // Forziamo la mezzanotte locale anche per Pasqua e Pasquetta
+    const tPasqua = new Date(pasqua.getFullYear(), pasqua.getMonth(), pasqua.getDate(), 0, 0, 0, 0).getTime();
+    const tPasquetta = tPasqua + (24 * 60 * 60 * 1000); // Esattamente 24 ore dopo
 
     // 1. Priorità assoluta: Feste (Pasqua, Pasquetta e Feste Fisse)
     if (tData === tPasqua || tData === tPasquetta || FESTE_FISSE.includes(tagFesta)) {
@@ -344,7 +328,7 @@ function calcolaCronoprogramma(usaEffetti = false) {
     const daysInput = parseInt(document.getElementById('days').value);
     if (!startInput || isNaN(daysInput) || daysInput <= 0) return;
 
-    let dataCorrente = new Date(startInput);
+    let dataCorrente = new Date(startInput + "T00:00:00");
     let giorniTrovati = 0;
     registroGiorni = []; 
 
