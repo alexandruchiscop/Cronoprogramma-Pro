@@ -671,26 +671,45 @@ function confermaCopia() {
     setTimeout(() => { btn.innerText = tOriginale; btn.style.backgroundColor = ""; }, 2000);
 }
 
-function stampaTutto() {
+function apriPrintModal() {
+    document.getElementById('printModal').style.display = 'flex';
+}
+
+function chiudiPrintModal() {
+    document.getElementById('printModal').style.display = 'none';
+}
+
+function eseguiStampa(tipo) {
     const cal = document.getElementById('calendarContainer');
     const log = document.getElementById('logContainer');
     
-    // Memorizziamo come sono adesso (visibili o nascosti)
-    const calWasVisible = cal.style.display;
-    const logWasVisible = log.style.display;
+    // Salviamo lo stato attuale per ripristinarlo dopo
+    const originalCal = cal.style.display;
+    const originalLog = log.style.display;
 
-    // Li mostriamo entrambi
-    cal.style.display = 'block';
-    log.style.display = 'block';
+    // Chiudiamo il modal prima di stampare
+    chiudiPrintModal();
 
-    // Lanciamo la stampa
-    window.print();
+    // Applichiamo la scelta dell'utente
+    if (tipo === 'solo-lista') {
+        cal.style.setProperty('display', 'none', 'important');
+        log.style.setProperty('display', 'block', 'important');
+    } else if (tipo === 'solo-cal') {
+        cal.style.setProperty('display', 'block', 'important');
+        log.style.setProperty('display', 'none', 'important');
+    } else {
+        cal.style.setProperty('display', 'block', 'important');
+        log.style.setProperty('display', 'block', 'important');
+    }
 
-    // Dopo la stampa (o chiusura finestra), ripristiniamo la vista originale
+    // Piccola attesa per permettere al browser di aggiornare la vista
     setTimeout(() => {
-        cal.style.display = calWasVisible;
-        log.style.display = logWasVisible;
-    }, 500);
+        window.print();
+        
+        // Ripristiniamo la vista che l'utente aveva prima di stampare
+        cal.style.display = originalCal;
+        log.style.display = originalLog;
+    }, 200);
 }
 
 /* =========================================
