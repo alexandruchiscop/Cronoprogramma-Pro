@@ -680,43 +680,41 @@ function chiudiPrintModal() {
 }
 
 function eseguiStampa(tipo) {
-    const cal = document.getElementById('calendarContainer');
-    const log = document.getElementById('logContainer');
     const modal = document.getElementById('printModal');
 
-    // 1. FORZIAMO IL CALCOLO (fondamentale se non hai cliccato i tasti vista)
+    // 1. FORZIAMO IL CALCOLO DEI DATI
+    // Importante: genera l'HTML anche se l'utente non ha mai aperto la tabella
     if (typeof calcolaDataTarget === "function") {
         calcolaDataTarget();
     }
 
-    // 2. CHIUDIAMO IL MODAL IMMEDIATAMENTE
-    // Safari vuole che l'azione sia "diretta" dopo il click del bottone
-    modal.style.display = 'none';
+    // 2. PULIZIA CLASSI PRECEDENTI
+    // Rimuoviamo eventuali rimasugli di stampe precedenti
+    document.body.classList.remove('print-only-list', 'print-only-cal');
 
-    // 3. APPLICHIAMO LA VISIBILITÀ (Senza setTimeout)
-    // Usiamo display: block/none invece di setProperty per massima compatibilità iOS
+    // 3. APPLICHIAMO LA LOGICA DI ESCLUSIONE
+    // Invece di nascondere i DIV, diciamo al BODY cosa vogliamo escludere
     if (tipo === 'solo-lista') {
-        cal.style.display = 'none';
-        log.style.display = 'block';
+        document.body.classList.add('print-only-cal'); // Nasconde il calendario nel PDF
     } else if (tipo === 'solo-cal') {
-        cal.style.display = 'block';
-        log.style.display = 'none';
-    } else {
-        cal.style.display = 'block';
-        log.style.display = 'block';
+        document.body.classList.add('print-only-list'); // Nasconde la lista nel PDF
     }
+    // Se 'entrambi', non aggiungiamo classi e il CSS mostrerà tutto.
 
-    // 4. LANCIO STAMPA DIRETTO
-    // Rimuovendo il setTimeout, Safari capisce che la stampa 
-    // è una conseguenza diretta del tuo "tap" sul bottone del modal.
-    window.print();
+    // 4. CHIUDIAMO IL MODAL
+    if (modal) modal.style.display = 'none';
 
-    // 5. RIPRISTINO (Solo dopo che la finestra di stampa si è chiusa)
-    // Nota: window.print() è "bloccante", quindi il codice sotto 
-    // viene eseguito solo DOPO che hai chiuso la schermata di stampa.
-    // Ripristiniamo una vista standard (es. il log)
-    cal.style.display = 'none';
-    log.style.display = 'block';
+    // 5. IL TRUCCO PER SAFARI (requestAnimationFrame)
+    // Chiediamo al browser di stampare SOLO dopo aver aggiornato la grafica
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            window.print();
+            
+            // 6. RIPRISTINO
+            // Una volta chiusa la finestra di stampa, puliamo le classi
+            document.body.classList.remove('print-only-list', 'print-only-cal');
+        });
+    });
 }
 
 /* =========================================
