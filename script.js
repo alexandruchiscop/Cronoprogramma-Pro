@@ -354,8 +354,8 @@ function calcolaRetroPlanning() {
     
     if (!startVal || !endVal) return;
     
-    let dataInizio = new Date(startVal);
-    let dataFine = new Date(endVal);
+   let dataInizio = new Date(startVal + "T00:00:00");
+   let dataFine = new Date(endVal + "T00:00:00");
     
     // Se la fine è prima dell'inizio, nascondi i risultati
     if (dataFine <= dataInizio) { 
