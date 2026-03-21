@@ -277,13 +277,26 @@ input {
    REGOLE PER IL PDF / STAMPA OTTIMIZZATE
    ========================================= */
 @media print {
-    /* 1. Nascondi interfaccia e tasti */
+    /* 1. Nascondi interfaccia e tasti (Il tuo codice attuale) */
     header, .mode-selector, .setup-section, .scelta-vista-switcher, 
     .btn-copy, .btn-print, .btn-print-all, .btn-reset-wrapper, 
     .ferie-container, .lock-overlay, .btn-feedback-float {
         display: none !important;
     }
 
+    /* --- AGGIUNGI QUESTO PER SAFARI / IOS --- */
+    /* Forza Safari a mostrare i contenitori se il JS ha detto che sono visibili */
+    #logContainer, #calendarContainer {
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+    
+    /* Se un elemento è nascosto via JS (inline style), non forzarlo */
+    #logContainer[style*="display: none"], 
+    #calendarContainer[style*="display: none"] {
+        display: none !important;
+    }
+   
     /* 2. Setup Foglio */
     body {
         background: white !important;
