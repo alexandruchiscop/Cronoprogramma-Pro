@@ -682,36 +682,36 @@ function chiudiPrintModal() {
 function eseguiStampa(tipo) {
     const modal = document.getElementById('printModal');
 
-    // 1. FORZIAMO IL CALCOLO DEI DATI
-    // Importante: genera l'HTML anche se l'utente non ha mai aperto la tabella
-    if (typeof calcolaDataTarget === "function") {
-        calcolaDataTarget();
+    // 1. FIX FONDAMENTALE: Usiamo il nome corretto della tua funzione
+    // Questo genera i dati (registroGiorni) se non l'avevi ancora fatto
+    if (typeof eseguiCalcoloCorretto === "function") {
+        eseguiCalcoloCorretto();
     }
 
-    // 2. PULIZIA CLASSI PRECEDENTI
-    // Rimuoviamo eventuali rimasugli di stampe precedenti
+    // 2. RIGENERIAMO I CONTENUTI (Tabella e Calendario)
+    // Così siamo sicuri che il DOM sia pieno di dati prima di stampare
+    popolaTabellaDettagli();
+    disegnaCalendario();
+
+    // 3. PULIZIA CLASSI PRECEDENTI
     document.body.classList.remove('print-only-list', 'print-only-cal');
 
-    // 3. APPLICHIAMO LA LOGICA DI ESCLUSIONE
-    // Invece di nascondere i DIV, diciamo al BODY cosa vogliamo escludere
+    // 4. LOGICA DI ESCLUSIONE (Sincronizzata con il CSS)
     if (tipo === 'solo-lista') {
-        document.body.classList.add('print-only-cal'); // Nasconde il calendario nel PDF
+        document.body.classList.add('print-only-cal'); // Nasconde il calendario
     } else if (tipo === 'solo-cal') {
-        document.body.classList.add('print-only-list'); // Nasconde la lista nel PDF
+        document.body.classList.add('print-only-list'); // Nasconde la lista
     }
-    // Se 'entrambi', non aggiungiamo classi e il CSS mostrerà tutto.
 
-    // 4. CHIUDIAMO IL MODAL
+    // 5. CHIUDIAMO IL MODAL
     if (modal) modal.style.display = 'none';
 
-    // 5. IL TRUCCO PER SAFARI (requestAnimationFrame)
-    // Chiediamo al browser di stampare SOLO dopo aver aggiornato la grafica
+    // 6. LANCIO STAMPA (Ottimizzato Safari)
     requestAnimationFrame(() => {
         requestAnimationFrame(() => {
             window.print();
             
-            // 6. RIPRISTINO
-            // Una volta chiusa la finestra di stampa, puliamo le classi
+            // 7. RIPRISTINO
             document.body.classList.remove('print-only-list', 'print-only-cal');
         });
     });
