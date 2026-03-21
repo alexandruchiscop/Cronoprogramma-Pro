@@ -682,32 +682,32 @@ function chiudiPrintModal() {
 function eseguiStampa(tipo) {
     const modal = document.getElementById('printModal');
 
-    // 1. Rigeneriamo i dati per sicurezza
+    // 1. Rigeneriamo i dati per essere sicuri che il PDF sia pieno
     if (typeof eseguiCalcoloCorretto === "function") {
         eseguiCalcoloCorretto();
     }
 
-    // 2. Forza il riempimento HTML dei contenitori
+    // 2. Forza il popolamento dell'HTML (importante se i div erano chiusi)
     popolaTabellaDettagli();
     disegnaCalendario();
 
-    // 3. Reset totale delle classi sul body
+    // 3. Pulizia classi precedenti
     document.body.classList.remove('print-only-list', 'print-only-cal');
 
-    // 4. APPLICAZIONE LOGICA INVERSA (Quella che comanda il tuo CSS)
+    // 4. APPLICAZIONE LOGICA (Sincronizzata con il tuo CSS)
     if (tipo === 'solo-lista') {
-        // Per vedere SOLO la lista, attiviamo la classe che NASCONDE il calendario
+        // Applichiamo la classe che nel CSS nasconde il CALENDARIO
         document.body.classList.add('print-only-list');
     } else if (tipo === 'solo-cal') {
-        // Per vedere SOLO il calendario, attiviamo la classe che NASCONDE il log/lista
+        // Applichiamo la classe che nel CSS nasconde la LISTA (logContainer)
         document.body.classList.add('print-only-cal');
     }
-    // Se tipo è 'entrambi', non aggiungiamo classi e il CSS mostra tutto
+    // Se 'entrambi', non aggiungiamo classi e il CSS mostra tutto (default)
 
-    // 5. Gestione Modal
+    // 5. Chiudi il modal
     if (modal) modal.style.display = 'none';
 
-    // 6. Stampa (Ottimizzata per Safari/Brave/Chrome)
+    // 6. Lancio stampa ottimizzato per Safari/Mobile/Brave
     requestAnimationFrame(() => {
         requestAnimationFrame(() => {
             window.print();
