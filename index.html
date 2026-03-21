@@ -114,9 +114,10 @@
                     <span class="label" id="resultLabel">CONSEGNA PREVISTA</span>
                     <h2 id="endDate"></h2>
                     <div class="action-buttons">
-                    <button onclick="copiaRisultato()" class="btn-copy">Copia Riepilogo</button>
-                    <button onclick="window.print()" class="btn-print">Scarica PDF / Stampa</button>
-                </div>
+                        <button onclick="window.print()" class="btn-print" title="Stampa quello che vedi ora">Stampa Vista</button>
+                        <button onclick="stampaTutto()" class="btn-print" style="background: #0f172a;">Stampa Tutto (PDF)</button>
+                        <button onclick="copiaRisultato()" class="btn-copy">Copia Testo</button>
+                    </div>
             </div>
 
                 <div class="stats-grid">
