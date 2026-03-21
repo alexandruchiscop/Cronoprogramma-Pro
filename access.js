@@ -19,6 +19,27 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+/**
+ * ACCESS.JS - Gestione Sicurezza Ottimizzata
+ */
+const URL_SCRIPT_GOOGLE = "https://script.google.com/macros/s/AKfycbxSjRnOkHy6Ht2aOj-h74XUTCCH3Ha8jJV1L3NUTRujJcs66M1dDyhQJvp9o5aYimTj5g/exec";
+
+document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('btnUnlock');
+    const input = document.getElementById('passInput');
+
+    // Estendiamo la sessione a 24 ore (86400000 ms) per non dover loggare continuamente
+    const sessione = localStorage.getItem('cronoprogramma_auth');
+    if (sessione && (Date.now() - sessione < 86400000)) {
+        document.getElementById('lockScreen').style.display = 'none';
+    }
+
+    btn.addEventListener('click', validaAccesso);
+    input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') validaAccesso();
+    });
+});
+
 async function validaAccesso() {
     const inputUser = document.getElementById('userInput'); // Nuovo campo
     const inputPass = document.getElementById('passInput');
@@ -76,6 +97,31 @@ async function validaAccesso() {
         inputPass.disabled = false;
         mostraErrore();
     }
+}
+
+function sbloccaSito() {
+    const overlay = document.getElementById('lockScreen');
+    overlay.style.transition = 'opacity 0.4s ease-out';
+    overlay.style.opacity = '0';
+    
+    // Salviamo il timestamp del login
+    localStorage.setItem('cronoprogramma_auth', Date.now());
+    
+    // Rimuoviamo l'elemento dal DOM dopo l'animazione
+    setTimeout(() => {
+        overlay.style.display = 'none';
+    }, 400);
+}
+
+function mostraErrore() {
+    const input = document.getElementById('passInput');
+    const errore = document.getElementById('lockError');
+    
+    errore.style.display = 'block';
+    input.disabled = false;
+    input.value = "";
+    input.placeholder = "Riprova...";
+    input.focus(); // Riporta il focus per scrivere subito
 }
 
 function sbloccaSito() {
