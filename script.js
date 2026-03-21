@@ -682,40 +682,37 @@ function chiudiPrintModal() {
 function eseguiStampa(tipo) {
     const modal = document.getElementById('printModal');
 
-    // 1. Rigeneriamo i dati per essere sicuri che il PDF sia pieno
+    // 1. Rigeneriamo i dati e l'HTML per essere sicuri che i contenitori siano pieni
     if (typeof eseguiCalcoloCorretto === "function") {
         eseguiCalcoloCorretto();
     }
-
-    // 2. Forza il popolamento dell'HTML (importante se i div erano chiusi)
     popolaTabellaDettagli();
     disegnaCalendario();
 
-    // 3. Pulizia classi precedenti
+    // 2. Pulizia e applicazione classi
     document.body.classList.remove('print-only-list', 'print-only-cal');
-
-    // 4. APPLICAZIONE LOGICA (Sincronizzata con il tuo CSS)
+    
     if (tipo === 'solo-lista') {
-        // Applichiamo la classe che nel CSS nasconde il CALENDARIO
         document.body.classList.add('print-only-list');
     } else if (tipo === 'solo-cal') {
-        // Applichiamo la classe che nel CSS nasconde la LISTA (logContainer)
         document.body.classList.add('print-only-cal');
     }
-    // Se 'entrambi', non aggiungiamo classi e il CSS mostra tutto (default)
 
-    // 5. Chiudi il modal
+    // 3. Chiudiamo il modal prima della stampa
     if (modal) modal.style.display = 'none';
 
-    // 6. Lancio stampa ottimizzato per Safari/Mobile/Brave
-    requestAnimationFrame(() => {
+    // 4. FIX PER iOS/SAFARI: Usiamo un piccolo timeout (150ms) 
+    // per dare tempo al sistema di "digerire" le classi CSS prima di generare il PDF.
+    setTimeout(() => {
         requestAnimationFrame(() => {
             window.print();
             
-            // 7. Ripristino immediato dopo il comando di stampa
-            document.body.classList.remove('print-only-list', 'print-only-cal');
+            // 5. Ripristino (con un leggero ritardo dopo la chiusura della finestra di stampa)
+            setTimeout(() => {
+                document.body.classList.remove('print-only-list', 'print-only-cal');
+            }, 500);
         });
-    });
+    }, 150); 
 }
 
 /* =========================================
