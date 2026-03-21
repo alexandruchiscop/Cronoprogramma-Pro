@@ -682,44 +682,41 @@ function chiudiPrintModal() {
 function eseguiStampa(tipo) {
     const cal = document.getElementById('calendarContainer');
     const log = document.getElementById('logContainer');
-    
-    // --- IL FIX: Forziamo il calcolo dei dati ---
-    // Chiamiamo la tua funzione che genera i risultati 
-    // così le tabelle vengono riempite anche se non le hai ancora visualizzate
+    const modal = document.getElementById('printModal');
+
+    // 1. FORZIAMO IL CALCOLO (fondamentale se non hai cliccato i tasti vista)
     if (typeof calcolaDataTarget === "function") {
-        calcolaDataTarget(); 
-    } else if (typeof calcola === "function") {
-        calcola();
+        calcolaDataTarget();
     }
 
-    // Salviamo lo stato attuale per ripristinarlo dopo
-    const originalCal = cal.style.display;
-    const originalLog = log.style.display;
+    // 2. CHIUDIAMO IL MODAL IMMEDIATAMENTE
+    // Safari vuole che l'azione sia "diretta" dopo il click del bottone
+    modal.style.display = 'none';
 
-    // Chiudiamo il modal prima di stampare
-    chiudiPrintModal();
-
-    // Applichiamo la scelta dell'utente
+    // 3. APPLICHIAMO LA VISIBILITÀ (Senza setTimeout)
+    // Usiamo display: block/none invece di setProperty per massima compatibilità iOS
     if (tipo === 'solo-lista') {
-        cal.style.setProperty('display', 'none', 'important');
-        log.style.setProperty('display', 'block', 'important');
+        cal.style.display = 'none';
+        log.style.display = 'block';
     } else if (tipo === 'solo-cal') {
-        cal.style.setProperty('display', 'block', 'important');
-        log.style.setProperty('display', 'none', 'important');
+        cal.style.display = 'block';
+        log.style.display = 'none';
     } else {
-        cal.style.setProperty('display', 'block', 'important');
-        log.style.setProperty('display', 'block', 'important');
+        cal.style.display = 'block';
+        log.style.display = 'block';
     }
 
-    // Aumentiamo leggermente il tempo (da 200 a 350ms) 
-    // per dare al telefono il tempo di "disegnare" i nuovi dati
-    setTimeout(() => {
-        window.print();
-        
-        // Ripristiniamo la vista che l'utente aveva prima di stampare
-        cal.style.display = originalCal;
-        log.style.display = originalLog;
-    }, 350);
+    // 4. LANCIO STAMPA DIRETTO
+    // Rimuovendo il setTimeout, Safari capisce che la stampa 
+    // è una conseguenza diretta del tuo "tap" sul bottone del modal.
+    window.print();
+
+    // 5. RIPRISTINO (Solo dopo che la finestra di stampa si è chiusa)
+    // Nota: window.print() è "bloccante", quindi il codice sotto 
+    // viene eseguito solo DOPO che hai chiuso la schermata di stampa.
+    // Ripristiniamo una vista standard (es. il log)
+    cal.style.display = 'none';
+    log.style.display = 'block';
 }
 
 /* =========================================
