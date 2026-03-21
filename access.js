@@ -26,21 +26,17 @@ async function validaAccesso() {
 
     if (!pass) return;
 
-    // UI: Feedback immediato di caricamento
     input.disabled = true;
-    input.placeholder = "Verifica in corso...";
+    input.placeholder = "Verifica...";
     errore.style.display = 'none';
 
-    try {
-        /* OTTIMIZZAZIONE: 
-           Inviamo una singola richiesta GET. Le GET su Google Apps Script 
-           sono generalmente più veloci e gestiscono meglio il reindirizzamento
-           necessario per leggere la risposta JSON.
-        */
-        const response = await fetch(`${URL_SCRIPT_GOOGLE}?pass=${encodeURIComponent(pass)}`);
-        
-        if (!response.ok) throw new Error("Errore di rete");
+    // Rilevamento semplice del dispositivo
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    const dispositivo = isMobile ? "Smartphone/Tablet" : "Computer (PC/Mac)";
 
+    try {
+        // Inviamo anche il parametro &dev
+        const response = await fetch(`${URL_SCRIPT_GOOGLE}?pass=${encodeURIComponent(pass)}&dev=${encodeURIComponent(dispositivo)}`);
         const result = await response.json();
 
         if (result.status === "autorizzato") {
@@ -50,7 +46,6 @@ async function validaAccesso() {
         }
     } catch (err) {
         console.error("Errore autenticazione:", err);
-        // Se il server è offline o c'è un errore, resettiamo l'input per riprovare
         mostraErrore();
     }
 }
