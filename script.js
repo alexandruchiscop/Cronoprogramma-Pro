@@ -240,6 +240,8 @@ function calcolaPasqua(anno) {
     const k = c % 4;
     const l = (32 + 2 * e + 2 * i - h - k) % 7;
     const m = Math.floor((a + 11 * h + 22 * l) / 451);
+    
+    // Il calcolo finale che determina mese e giorno
     const n = h + l - 7 * m + 114;
     const mese = Math.floor(n / 31);
     const giorno = (n % 31) + 1;
