@@ -276,27 +276,17 @@ input {
 /* =========================================
    REGOLE PER IL PDF / STAMPA OTTIMIZZATE
    ========================================= */
+/* =========================================
+   REGOLE PER IL PDF / STAMPA OTTIMIZZATE
+   ========================================= */
 @media print {
-    /* 1. Nascondi interfaccia e tasti (Il tuo codice attuale) */
+    /* 1. Nascondi interfaccia e tasti */
     header, .mode-selector, .setup-section, .scelta-vista-switcher, 
     .btn-copy, .btn-print, .btn-print-all, .btn-reset-wrapper, 
-    .ferie-container, .lock-overlay, .btn-feedback-float {
+    .ferie-container, .lock-overlay, .btn-feedback-float, #printModal {
         display: none !important;
     }
 
-    /* --- AGGIUNGI QUESTO PER SAFARI / IOS --- */
-    /* Forza Safari a mostrare i contenitori se il JS ha detto che sono visibili */
-    #logContainer, #calendarContainer {
-        opacity: 1 !important;
-        visibility: visible !important;
-    }
-    
-    /* Se un elemento è nascosto via JS (inline style), non forzarlo */
-    #logContainer[style*="display: none"], 
-    #calendarContainer[style*="display: none"] {
-        display: none !important;
-    }
-   
     /* 2. Setup Foglio */
     body {
         background: white !important;
@@ -316,22 +306,35 @@ input {
         padding: 0 !important;
     }
 
-   
-    /* 3. LOGICA DI STAMPA DINAMICA */
-    /* Stampiamo solo ciò che è visibile a schermo, a meno che non usiamo il tasto "Stampa Tutto" */
+    /* 3. LOGICA DI STAMPA DINAMICA (Sblocca Safari) */
+    #calendarContainer, #logContainer {
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+
+    /* Classi di esclusione gestite da JS */
+    body.print-only-list #calendarContainer {
+        display: none !important;
+    }
+    
+    body.print-only-cal #logContainer {
+        display: none !important;
+    }
+
     #result { display: block !important; }
     
-    /* 4. FIX CALENDARIO (Per non farlo tagliare) */
+    /* 4. FIX CALENDARIO */
     #calendarGrid {
         display: grid !important;
-        grid-template-columns: repeat(7, 1fr) !important; /* Forza 7 colonne */
+        grid-template-columns: repeat(7, 1fr) !important;
         width: 100% !important;
         gap: 1px !important;
     }
 
     .cal-day {
-        min-height: 70px !important; /* Altezza ridotta per il PDF */
-        font-size: 9px !important;    /* Testo più piccolo per far stare tutto */
+        min-height: 70px !important;
+        font-size: 9px !important;
         padding: 2px !important;
         border: 1px solid #eee !important;
         page-break-inside: avoid;
@@ -347,14 +350,12 @@ input {
     }
     tr { page-break-inside: avoid; page-break-after: auto; }
 
-    /* 6. Mantiene i colori */
+    /* 6. Estetica finale */
     * {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
     }
-}
 
-    /* Rende i testi un po' più scuri per la lettura su carta */
     .stat-val, h2 {
         color: #000 !important;
     }
