@@ -43,17 +43,20 @@ async function validaAccesso() {
     const dispositivo = isMobile ? "Smartphone/Tablet" : "Computer (PC/Mac)";
 
     try {
-        const response = await fetch(URL_SCRIPT_GOOGLE, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            // Inviamo sia 'user' che 'pass' e indichiamo l'azione 'login'
-            body: JSON.stringify({ 
-                action: 'login',
-                user: user, 
-                pass: pass, 
-                dev: dispositivo 
-            })
-        });
+       const response = await fetch(URL_SCRIPT_GOOGLE, {
+    method: 'POST', // Deve essere POST
+    mode: 'cors',   // Aggiungi esplicitamente questo
+    cache: 'no-cache',
+    headers: {
+        'Content-Type': 'text/plain;charset=utf-8', // Google Apps Script preferisce questo per evitare blocchi CORS
+    },
+    body: JSON.stringify({ 
+        action: 'login', 
+        user: user, 
+        pass: pass, 
+        dev: dispositivo 
+    })
+});
         const result = await response.json();
 
         if (result.status === "autorizzato") {
