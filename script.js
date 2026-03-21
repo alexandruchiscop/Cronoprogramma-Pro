@@ -312,6 +312,7 @@ function analizzaGiorno(data) {
     
     // 3. Altrimenti è lavorativo
     return { data: dataFormattata, tipo: "LAVORATIVO", classe: "row-lavorativo" };
+}
 
 // Funzione per il click sul nuovo bottone
 function togglePatrono() {
