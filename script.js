@@ -2,6 +2,7 @@
    1. CONFIGURAZIONE E STATO
    ========================================= */
 const FESTE_FISSE = ["01-01", "06-01", "25-04", "01-05", "02-06", "15-08", "01-11", "08-12", "25-12", "26-12"];
+const _cachePasqua = {}; // FIX 5: cache per evitare ricalcoli ripetuti dello stesso anno
 let registroGiorni = [];
 let sabatoLavorativo = localStorage.getItem('sabatoLavorativo') === 'true';
 let currentMode = 'forward';
@@ -60,17 +61,21 @@ function aggiungiPeriodo(start = "", end = "", note = "") {
     
     wrapper.innerHTML = `
         <div class="periodo-header">
-            <input type="text" class="f-note" placeholder="Descrizione (es. Ferie Natale)" value="${note}" oninput="eseguiCalcoloCorretto()">
+            <input type="text" class="f-note" placeholder="Descrizione (es. Ferie Natale)" oninput="eseguiCalcoloCorretto()">
         </div>
         <div class="periodo-item">
-            <input type="date" class="f-start" value="${start}" onchange="eseguiCalcoloCorretto()">
-            <input type="date" class="f-end" value="${end}" onchange="eseguiCalcoloCorretto()">
+            <input type="date" class="f-start" onchange="eseguiCalcoloCorretto()">
+            <input type="date" class="f-end" onchange="eseguiCalcoloCorretto()">
             <button type="button" class="btn-remove-periodo" onclick="this.parentElement.parentElement.remove(); eseguiCalcoloCorretto();">×</button>
         </div>
         <div class="error-msg" style="display:none; color: #dc2626; font-size: 0.7rem; font-weight: 700; margin-top: -8px; margin-bottom: 12px; margin-left: 5px;">
             ⚠️ La data di fine deve essere successiva all'inizio
         </div>
     `;
+    // FIX 3: valori assegnati via DOM per evitare XSS da input utente in innerHTML
+    wrapper.querySelector('.f-note').value = note;
+    wrapper.querySelector('.f-start').value = start;
+    wrapper.querySelector('.f-end').value = end;
     container.appendChild(wrapper);
 }
 
@@ -231,7 +236,7 @@ function calcolaPasqua(anno) {
     // Algoritmo di Meeus/Jones/Butcher (Universale)
     const a = anno % 19;
     const b = Math.floor(anno / 100);
-    const c = anno % 100; // FIX: ultime due cifre dell'anno (era erroneamente anno % 4)
+    const c = anno % 100; // FIX: ultime due cifre anno (era erroneamente % 4)
     const d = Math.floor(b / 4);
     const e = b % 4;
     const f = Math.floor((b + 8) / 25);
@@ -285,8 +290,10 @@ function analizzaGiorno(data) {
         }
     }
 
-    // --- CALCOLO PASQUA E PASQUETTA (MATEMATICO) ---
-    const pDate = calcolaPasqua(anno);
+    // --- CALCOLO PASQUA E PASQUETTA (CON CACHE PER ANNO) ---
+    // FIX 5: calcolaPasqua() eseguita al massimo una volta per anno
+    if (!_cachePasqua[anno]) _cachePasqua[anno] = calcolaPasqua(anno);
+    const pDate = _cachePasqua[anno];
     // Trasformiamo la Pasqua in un timestamp locale puro
     const tPasqua = new Date(pDate.getFullYear(), pDate.getMonth(), pDate.getDate(), 0, 0, 0, 0).getTime();
     const tPasquetta = tPasqua + (24 * 60 * 60 * 1000); 
@@ -362,7 +369,7 @@ function calcolaCronoprogramma(usaEffetti = false) {
     mostraRisultato(titolo, giorniTrovati, dataCorrente, usaEffetti);
 }
 
-function calcolaRetroPlanning() {
+function calcolaRetroPlanning(usaEffetti = false) { // FIX 7: parametro aggiunto
     const startVal = document.getElementById('startDate').value;
     const endVal = document.getElementById('endDateInput').value;
     
@@ -396,7 +403,7 @@ function calcolaRetroPlanning() {
         registroGiorni.push(analisi);
     }
     
-    mostraRisultato(`${ggLavorativi} GIORNI`, ggLavorativi, dataFine);
+    mostraRisultato(`${ggLavorativi} GIORNI`, ggLavorativi, dataFine, usaEffetti); // FIX 7
 }
 
 function aggiornaBadgeFerie() {
@@ -470,7 +477,8 @@ function mostraRisultato(titoloH2, ggLavorativi, dataRiferimento, usaEffetti = f
     const resultSection = document.getElementById('result');
     resultSection.style.display = 'block';
     
-    const startInput = new Date(document.getElementById('startDate').value);
+    // FIX 4: T00:00:00 per evitare scarto di fuso orario nel conteggio giorni solari
+    const startInput = new Date(document.getElementById('startDate').value + "T00:00:00");
     const giorniSolari = Math.ceil((dataRiferimento - startInput) / (1000 * 3600 * 24));
     
     document.getElementById('endDate').innerText = titoloH2;
@@ -599,13 +607,22 @@ function disegnaCalendario() {
         let tipoClasse = "";
         switch(item.tipo) {
             case "LAVORATIVO": tipoClasse = "cal-lavorativo"; break;
-            case "WEEKEND": tipoClasse = "cal-weekend"; break;
-            case "FESTA": tipoClasse = "cal-festa"; break;
-            case "SOSP.": tipoClasse = "cal-sosp"; break;
+            case "WEEKEND":    tipoClasse = "cal-weekend";    break;
+            case "FESTA":      tipoClasse = "cal-festa";      break;
+            case "SOSP.":      tipoClasse = "cal-sosp";       break;
+            case "PATRONO":    tipoClasse = "cal-festa";      break; // FIX 2: era assente, giorno bianco nel calendario
         }
         
         dayDiv.className = `cal-day ${tipoClasse}`;
-        const etichetta = (isMobile && item.tipo === 'LAVORATIVO') ? `G${item.nrGiorno}` : (item.tipo === 'LAVORATIVO' ? `GG ${item.nrGiorno}` : item.tipo);
+        // FIX 2: aggiunta gestione etichetta per PATRONO
+        let etichetta;
+        if (item.tipo === 'LAVORATIVO') {
+            etichetta = isMobile ? `G${item.nrGiorno}` : `GG ${item.nrGiorno}`;
+        } else if (item.tipo === 'PATRONO') {
+            etichetta = isMobile ? "PAT" : "PATRONO";
+        } else {
+            etichetta = item.tipo;
+        }
 
         dayDiv.innerHTML = `<span class="cal-date">${d}</span><span class="cal-label">${etichetta}</span>`;
         grid.appendChild(dayDiv);

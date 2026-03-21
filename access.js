@@ -36,7 +36,14 @@ async function validaAccesso() {
     const dispositivo = isMobile ? "Smartphone/Tablet" : "Computer (PC/Mac)";
 
     try {
-        const response = await fetch(`${URL_SCRIPT_GOOGLE}?pass=${encodeURIComponent(pass)}&dev=${encodeURIComponent(dispositivo)}`);
+        // FIX SICUREZZA: password nel body POST, non nell'URL.
+        // Così non appare nella history del browser né nei log del server.
+        // NOTA: aggiorna anche il tuo Google Apps Script per gestire doPost(e).
+        const response = await fetch(URL_SCRIPT_GOOGLE, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ pass: pass, dev: dispositivo })
+        });
         const result = await response.json();
 
         if (result.status === "autorizzato") {
