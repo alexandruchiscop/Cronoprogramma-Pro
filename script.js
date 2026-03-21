@@ -683,6 +683,15 @@ function eseguiStampa(tipo) {
     const cal = document.getElementById('calendarContainer');
     const log = document.getElementById('logContainer');
     
+    // --- IL FIX: Forziamo il calcolo dei dati ---
+    // Chiamiamo la tua funzione che genera i risultati 
+    // così le tabelle vengono riempite anche se non le hai ancora visualizzate
+    if (typeof calcolaDataTarget === "function") {
+        calcolaDataTarget(); 
+    } else if (typeof calcola === "function") {
+        calcola();
+    }
+
     // Salviamo lo stato attuale per ripristinarlo dopo
     const originalCal = cal.style.display;
     const originalLog = log.style.display;
@@ -702,14 +711,15 @@ function eseguiStampa(tipo) {
         log.style.setProperty('display', 'block', 'important');
     }
 
-    // Piccola attesa per permettere al browser di aggiornare la vista
+    // Aumentiamo leggermente il tempo (da 200 a 350ms) 
+    // per dare al telefono il tempo di "disegnare" i nuovi dati
     setTimeout(() => {
         window.print();
         
         // Ripristiniamo la vista che l'utente aveva prima di stampare
         cal.style.display = originalCal;
         log.style.display = originalLog;
-    }, 200);
+    }, 350);
 }
 
 /* =========================================
