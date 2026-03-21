@@ -237,7 +237,8 @@ function calcolaPasqua(anno) {
 }
 
 function analizzaGiorno(data) {
-    // Creiamo una data "pulita" a mezzanotte locale
+    // 1. CREIAMO UNA DATA LOCALE PURA
+    // Questo trucco (anno, mese, giorno) azzera ore, minuti e fuso orario.
     const dLocale = new Date(data.getFullYear(), data.getMonth(), data.getDate(), 0, 0, 0, 0);
     const tData = dLocale.getTime();
 
@@ -247,20 +248,20 @@ function analizzaGiorno(data) {
     const tagFesta = `${String(gg).padStart(2, '0')}-${String(mm).padStart(2, '0')}`;
     const dataFormattata = `${String(gg).padStart(2, '0')}.${String(mm).padStart(2, '0')}.${anno}`;
 
-    // --- 1. CONTROLLO SANTO PATRONO ---
+    // --- CONTROLLO SANTO PATRONO ---
     const pGiorno = parseInt(document.getElementById('patronoGiorno').value);
     const pMese = parseInt(document.getElementById('patronoMese').value);
     if (patronoAttivo && gg === pGiorno && mm === pMese) {
         return { data: dataFormattata, tipo: "PATRONO", classe: "row-festa" };
     }
 
-    // --- 2. CONTROLLO SOSPENSIONI (FERIE) ---
+    // --- CONTROLLO SOSPENSIONI (FERIE) ---
     const periodiSosp = document.querySelectorAll('.periodo-item');
     for (let p of periodiSosp) {
         const sVal = p.querySelector('.f-start').value;
         const eVal = p.querySelector('.f-end').value;
         if (sVal && eVal) {
-            // Forziamo la data locale aggiungendo T00:00:00
+            // Forziamo la mezzanotte locale con T00:00:00
             const dInizio = new Date(sVal + "T00:00:00").getTime();
             const dFine = new Date(eVal + "T00:00:00").getTime();
             if (tData >= dInizio && tData <= dFine) {
@@ -269,22 +270,24 @@ function analizzaGiorno(data) {
         }
     }
 
-    // --- 3. CALCOLO PASQUA E PASQUETTA ---
+    // --- CALCOLO PASQUA E PASQUETTA (MATEMATICO) ---
     const pDate = calcolaPasqua(anno);
+    // Trasformiamo la Pasqua in un timestamp locale puro
     const tPasqua = new Date(pDate.getFullYear(), pDate.getMonth(), pDate.getDate(), 0, 0, 0, 0).getTime();
     const tPasquetta = tPasqua + (24 * 60 * 60 * 1000); 
 
-    // Confronto preciso
+    // 1. Priorità: Feste Fisse e Pasqua/Pasquetta
     if (tData === tPasqua || tData === tPasquetta || FESTE_FISSE.includes(tagFesta)) {
         return { data: dataFormattata, tipo: "FESTA", classe: "row-festa" };
     }
 
-    // --- 4. WEEKEND ---
+    // 2. Weekend
     const day = dLocale.getDay();
-    if (day === 0 || (day === 6 && !sabatoLavorativo)) { // Domenica o Sabato non lavorativo
+    if (day === 0 || (day === 6 && !sabatoLavorativo)) {
         return { data: dataFormattata, tipo: "WEEKEND", classe: "row-festa" };
     }
     
+    // 3. Lavorativo
     return { data: dataFormattata, tipo: "LAVORATIVO", classe: "row-lavorativo" };
 }
 
