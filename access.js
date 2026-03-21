@@ -22,31 +22,32 @@ document.addEventListener('DOMContentLoaded', () => {
 async function validaAccesso() {
     const input = document.getElementById('passInput');
     const errore = document.getElementById('lockError');
+    const loading = document.getElementById('loadingAccess'); // Riferimento barra
     const pass = input.value;
 
     if (!pass) return;
 
+    // UI: Stato di caricamento
     input.disabled = true;
-    input.placeholder = "Verifica...";
     errore.style.display = 'none';
+    loading.style.display = 'block'; // MOSTRA LA BARRA
 
-    // Rilevamento semplice del dispositivo
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     const dispositivo = isMobile ? "Smartphone/Tablet" : "Computer (PC/Mac)";
 
     try {
-        // CORREZIONE QUI: Usiamo la variabile URL_SCRIPT_GOOGLE definita in alto
         const response = await fetch(`${URL_SCRIPT_GOOGLE}?pass=${encodeURIComponent(pass)}&dev=${encodeURIComponent(dispositivo)}`);
-        
         const result = await response.json();
 
         if (result.status === "autorizzato") {
             sbloccaSito();
         } else {
+            loading.style.display = 'none'; // NASCONDI LA BARRA
             mostraErrore();
         }
     } catch (err) {
-        console.error("Errore autenticazione:", err);
+        console.error("Errore:", err);
+        loading.style.display = 'none'; // NASCONDI LA BARRA
         mostraErrore();
     }
 }
