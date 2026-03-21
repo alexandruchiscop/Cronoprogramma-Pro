@@ -1,6 +1,7 @@
 /* =========================================
    1. CONFIGURAZIONE E STATO
    ========================================= */
+
 const FESTE_FISSE = ["01-01", "06-01", "25-04", "01-05", "02-06", "15-08", "01-11", "08-12", "25-12", "26-12"];
 let registroGiorni = [];
 let sabatoLavorativo = localStorage.getItem('sabatoLavorativo') === 'true';
