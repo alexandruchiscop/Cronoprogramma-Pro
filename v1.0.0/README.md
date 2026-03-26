@@ -1,32 +1,20 @@
-# 📅 Cronoprogramma Pro
+🚀 Novità Versione 1.0.0
+👤 Gestione Profili e Privacy
+Accessi Multi-Account: Sistema di riconoscimento utente con credenziali personalizzate.
 
-Calcolatore deterministico per la pianificazione di scadenze e cronoprogrammi basati su giorni lavorativi effettivi. 🚀
+Cronologia Privata: Ogni utente visualizza nella propria Sidebar esclusivamente i propri ultimi 5 accessi. I dati sono isolati tramite chiavi dinamiche nel localStorage.
 
-## 🛠 Funzionalità principali
+Auto-Inizializzazione: Il sistema riconosce l'utente al login e personalizza l'interfaccia (Avatar e Nome) in tempo reale.
 
-Il software permette di gestire tempistiche di progetto complesse attraverso due modalità operative:
+🛠️ Ottimizzazioni Tecniche
+Refactoring del Codice: Architettura del codice riorganizzata per moduli (Accesso, Calcolo, Feedback) per una maggiore velocità di caricamento.
 
-* **Pianificazione Diretta (Forward):** Calcola la data di fine lavori partendo dalla data di inizio e dalla durata in giorni lavorativi. ⏱️
-* **Retro-Planning (Backward):** Determina i giorni lavorativi disponibili data una scadenza improrogabile. 🏁
+Sicurezza Sessione: Implementata la scadenza della sessione a 24 ore per proteggere i dati locali.
 
-## 🏖️ Gestione Calendario e Sospensioni
+Integrazione Cloud: Migliorata la comunicazione asincrona con Google Apps Script per la validazione delle utenze e l'invio dei feedback.
 
-L'algoritmo di calcolo integra filtri personalizzabili per riflettere le reali condizioni operative:
+📊 Migliorie UI/UX
+Sidebar Dinamica: Nuovo pannello profilo a scomparsa con riepilogo attività e impostazioni rapide.
 
-* **Sospensioni Feriali:** Possibilità di inserire multipli intervalli di date (es. chiusure estive o natalizie) da escludere dal conteggio. ❄️
-* **Santo Patrono:** Modulo specifico per la festività locale, con validazione automatica dei campi mese/giorno. 🏛️
-* **Weekend:** Gestione flessibile del sabato (lavorativo o non lavorativo). 🗓️
-* **Persistenza:** Salvataggio automatico delle impostazioni e dell'ultimo calcolo tramite `localStorage`. 💾
-
-## 📱 Caratteristiche Interfaccia
-
-* **Dual View:** Visualizzazione dei risultati tramite lista dettagliata giorno per giorno o vista calendario sintetica. 📋
-* **Mobile Optimized:** Input numerici ottimizzati per smartphone (apertura automatica del tastierino) e gestione dei limiti di data. 📲
-* **Feedback Dinamico:** Animazioni di stato (shake effect) e badge di notifica per segnalare la presenza di sospensioni attive nel calcolo. 🔔
-
-## 💻 Note Tecniche
-
-Sviluppato in **Vanilla JavaScript**, il progetto non richiede dipendenze esterne o database, garantendo massima velocità di esecuzione e privacy dei dati (elaborati esclusivamente lato utenti).
-
----
-*Tool di utilità tecnica per la pianificazione professionale.*
+⚙️ Work In Progress ⚙️
+-- mancano delle cosette qui e là --
