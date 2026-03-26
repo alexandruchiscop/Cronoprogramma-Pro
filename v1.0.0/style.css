@@ -1,0 +1,1673 @@
+/* region =========================================
+   1. VARIABILI E RESET
+   ========================================= */
+:root {
+    --primary: #2563eb;
+    --primary-light: #eff6ff;
+    --bg: #f1f5f9;
+    --white: #ffffff;
+    --text-main: #0f172a;
+    --text-sub: #475569;
+    --border: #e2e8f0;
+    
+    /* Colori Stati */
+    --success-text: #065f46;
+    --success-bg: #d1fae5;
+    --success-badge: #a7f3d0;
+    --danger-text: #991b1b;
+    --danger-bg: #fee2e2;
+    --danger-badge: #fecaca;
+    --festa-bg: #fff1f2;
+}
+
+body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background-color: var(--bg);
+    color: var(--text-main);
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    overscroll-behavior-x: none;
+    max-width: 100%;
+    overflow-x: hidden;
+    position: relative;
+}
+
+.app-wrapper { 
+    width: 100%; 
+    max-width: 650px; 
+}
+
+/* =========================================
+   2. HEADER E CARD
+   ========================================= */
+header { text-align: center; margin-bottom: 25px; }
+header h1 { font-size: 1.5rem; margin-bottom: 5px; font-weight: 700; }
+
+.badge { 
+    font-size: 0.65rem; 
+    background: var(--primary); 
+    color: white; 
+    padding: 3px 8px; 
+    border-radius: 10px; 
+    vertical-align: middle; 
+}
+
+.main-card, .details-card {
+    background: var(--white);
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+/* =========================================
+   3. FORM E INPUT (SETUP)
+   ========================================= */
+/* SOSTITUISCI IL VECCHIO .setup-section CON QUESTO */
+.setup-section { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 15px; 
+    align-items: stretch;
+}
+
+.input-field label { 
+    font-size: 0.8rem; 
+    font-weight: 600; 
+    color: var(--text-sub); 
+    margin-bottom: 6px; 
+    display: block; 
+}
+
+input { 
+    width: 100%; 
+    padding: 12px; 
+    border: 1px solid var(--border); 
+    border-radius: 12px; 
+    font-size: 16px;
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+#sospensioniContainer {
+    background-color: #f8fafc;
+    border: 2px dashed #cbd5e1;
+    border-radius: 12px;
+    padding: 10px 15px; /* Spazio interno al riquadro */
+    margin-bottom: 10px;
+}
+
+/* Opzionale: aggiungi un po' di spazio tra il titolo del blocco e i campi */
+#sospensioniContainer h4 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: var(--primary);
+}
+
+/* =========================================
+   4. PULSANTI (BOTTONI)
+   ========================================= */
+
+/* Selettore Modalità (Tab) */
+.mode-selector {
+    display: flex;
+    background: var(--bg);
+    padding: 4px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+}
+
+.tab-btn {
+    flex: 1;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    background: transparent;
+    color: var(--text-sub);
+    transition: all 0.2s ease;
+}
+
+.tab-btn.active {
+    background: var(--white);
+    color: var(--primary);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.btn-primary {
+    grid-column: 1 / -1;
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 16px;
+    border-radius: 12px;
+    font-weight: 700; /* Più marcato */
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2); /* Ombra blu leggera */
+    text-transform: uppercase; /* Stile più tecnico */
+    letter-spacing: 0.5px;
+}
+
+.btn-primary:active {
+    transform: scale(0.98); /* Effetto pressione */
+}
+
+/* Pulsante Sabato Lavorativo (Toggle) */
+.btn-toggle-sat {
+    grid-column: 1 / -1;
+    background: transparent;
+    color: var(--text-sub);
+    border: 2px solid var(--border);
+    padding: 14px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.btn-toggle-sat.active {
+    background: var(--primary-light);
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+.btn-outline {
+    width: 100%;
+    background: white;
+    border: 1.5px solid var(--border);
+    padding: 12px;
+    border-radius: 12px;
+    color: var(--text-sub);
+    font-weight: 600;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.btn-copy {
+    background: var(--white);
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    padding: 5px 12px;
+    border-radius: 8px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    margin-top: 10px;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+/* SANTO PATRONO DEI BOTTONI: CONTENITORE E INPUTS */
+.patrono-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 5px;
+}
+
+/* Bottone stile Sabato Lavorativo */
+.btn-toggle-patrono {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    border: 2px solid #e2e8f0;
+    background: #f8fafc;
+    color: #64748b;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: row; /* Incolonna il testo */
+    align-items: center;    /* Centra orizzontalmente */
+    justify-content: center; /* Centra verticalmente */
+    gap: 8px;               /* Spazio tra le due righe */
+    line-height: 1.2;       /* Migliora la leggibilità su due righe */
+}
+
+/* Solo per Mobile (schermi sotto i 600px) */
+@media (max-width: 600px) {
+    .btn-toggle-patrono {
+        flex-direction: column; /* Mette gli elementi uno sotto l'altro */
+        gap: 4px; 
+    }
+    
+    .btn-toggle-patrono span {
+        /* Opzionale: puoi rendere la scritta ATTIVA un po' più evidente */
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        font-weight: 800;
+    }
+}
+
+.btn-toggle-patrono.active {
+    background: white;
+    border-color: var(--primary);
+    color: var(--primary);
+    box-shadow: 0 0 0 1px var(--primary);
+}
+
+
+/* Riga degli input centrata */
+.patrono-inputs-row {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+    padding: 10px 0;
+}
+
+.input-mini {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.input-mini label {
+    font-size: 0.65rem;
+    font-weight: 800;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Input GG e MM grandi e centrati */
+.input-mini input {
+    width: 85px; /* Aumentato da 70px a 85px per dare respiro */
+    height: 55px;
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 800;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    color: var(--primary);
+    background: white;
+    -moz-appearance: textfield; /* Per Firefox */
+}
+
+.input-mini input:focus {
+    border-color: var(--primary);
+    outline: none;
+}
+
+/* Stile del tasto stampa (uguale al btn-copy ma con colori diversi) */
+.btn-print {
+    background: var(--white);
+    border: 1px solid #64748b;
+    color: #64748b;
+    padding: 5px 12px;
+    border-radius: 8px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    margin-top: 10px;
+    margin-left: 5px;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+/* =========================================
+   REGOLE PER IL PDF / STAMPA OTTIMIZZATE
+   ========================================= */
+@media print {
+    /* 1. Nascondi interfaccia e tasti */
+    header, .mode-selector, .setup-section, .scelta-vista-switcher, 
+    .btn-copy, .btn-print, .btn-print-all, .btn-reset-wrapper, 
+    .ferie-container, .lock-overlay, .btn-feedback-float, #printModal {
+        display: none !important;
+    }
+
+    /* 2. Setup Foglio */
+    body {
+        background: white !important;
+        margin: 0;
+        padding: 5mm; 
+    }
+
+    .app-wrapper {
+        max-width: 100% !important;
+        width: 100% !important;
+        box-shadow: none !important;
+    }
+
+    .main-card {
+        box-shadow: none !important;
+        border: none !important;
+        padding: 0 !important;
+    }
+
+    /* 3. LOGICA DI STAMPA DINAMICA (Sblocca Safari) */
+    #calendarContainer, #logContainer {
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+
+    /* Classi di esclusione gestite da JS */
+    body.print-only-list #calendarContainer {
+        display: none !important;
+    }
+    
+    body.print-only-cal #logContainer {
+        display: none !important;
+    }
+
+    #result { display: block !important; }
+    
+    /* 4. FIX CALENDARIO */
+    #calendarGrid {
+        display: grid !important;
+        grid-template-columns: repeat(7, 1fr) !important;
+        width: 100% !important;
+        gap: 1px !important;
+    }
+
+    .cal-day {
+        min-height: 70px !important;
+        font-size: 9px !important;
+        padding: 2px !important;
+        border: 1px solid #eee !important;
+        page-break-inside: avoid;
+    }
+
+    .cal-day-num { font-size: 11px !important; font-weight: bold; }
+
+    /* 5. FIX TABELLA */
+    table {
+        width: 100% !important;
+        border-collapse: collapse;
+        page-break-inside: auto;
+    }
+    tr { page-break-inside: avoid; page-break-after: auto; }
+
+    /* 6. Estetica finale */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    .stat-val, h2 {
+        color: #000 !important;
+    }
+}
+/* Tasto Reset Centrale */
+.btn-reset-wrapper {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 5px; /* Lo allinea visivamente agli input */
+}
+
+.btn-reset {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    width: 42px;
+    height: 42px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-sub);
+    transition: all 0.2s;
+}
+
+.btn-reset:hover {
+    background: var(--danger-bg);
+    color: var(--danger-text);
+    border-color: var(--danger-badge);
+}
+
+/* 1. Stile del tasto Reset */
+.btn-reset-inline {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    width: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-sub);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-reset-inline:hover {
+    background: var(--danger-bg);
+    color: var(--danger-text);
+    border-color: var(--danger-badge);
+}
+
+/* 2. Animazione di rotazione */
+.spin-animation {
+    animation: rotateReset 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes rotateReset {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(-360deg); }
+}
+
+/* 3. Fix per il telefono in orizzontale (Landscape) */
+@media (max-height: 500px) and (orientation: landscape) {
+    .setup-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* Mette gli input su due colonne pulite */
+        gap: 12px;
+    }
+    
+    header p { display: none; } /* Nasconde il sottotitolo per guadagnare spazio */
+    
+    .main-card {
+        padding: 15px;
+        margin-top: 5px;
+    }
+}
+
+/* =========================================
+   5. RISULTATI (CARDS E STATS)
+   ========================================= */
+.target-date-card {
+    text-align: center;
+    background: var(--primary-light);
+    padding: 20px;
+    border-radius: 16px;
+    margin: 20px 0;
+    border: 1px solid #dbeafe;
+}
+
+.target-date-card h2 { font-size: 1.4rem; color: var(--primary); margin: 5px 0; }
+
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.stat-item { 
+    background: #f8fafc; 
+    padding: 12px; 
+    border-radius: 12px; 
+    text-align: center; 
+    border: 1px solid #f1f5f9; 
+}
+
+.stat-val { display: block; font-size: 1.3rem; font-weight: 700; color: var(--text-main); }
+.stat-label { font-size: 0.7rem; color: var(--text-sub); text-transform: uppercase; }
+
+/* =========================================
+   6. TABELLA ANALITICA
+   ========================================= */
+.table-wrapper { overflow-x: hidden; }
+
+table { 
+    width: 100%; 
+    border-collapse: collapse; 
+    margin-top: 10px; 
+    table-layout: fixed; 
+}
+
+th, td { 
+    padding: 12px 2px; 
+    text-align: center; 
+    vertical-align: middle; 
+}
+
+/* Proporzioni Colonne */
+th:nth-child(1), td:nth-child(1) { width: 45px; } 
+th:nth-child(2), td:nth-child(2) { width: auto; }
+th:nth-child(3), td:nth-child(3) { width: 105px; }
+
+.data-evidenziata {
+    font-weight: 800;
+    color: var(--text-main);
+    font-size: 0.95rem;
+    letter-spacing: -0.2px;
+}
+
+.status-badge {
+    width: 85px;
+    padding: 6px 0;
+    border-radius: 6px;
+    font-size: 0.65rem;
+    font-weight: 850;
+    text-transform: uppercase;
+    display: inline-block;
+    text-align: center;
+}
+
+/* Colori Righe e Badge */
+.row-lavorativo { background-color: var(--success-bg); }
+.row-lavorativo .status-badge { color: var(--success-text); background-color: var(--success-badge); }
+
+.row-weekend { background-color: var(--danger-bg); }
+.row-weekend .status-badge { color: var(--danger-text); background-color: var(--danger-badge); }
+
+.row-festa { background-color: var(--festa-bg); border-left: 4px solid #ef4444; }
+.row-festa .status-badge { color: var(--danger-text); background-color: var(--danger-badge); }
+
+/* =========================================
+   7. RESPONSIVE (MEDIA QUERIES) - DEFINITIVO
+   ========================================= */
+@media (max-width: 480px) {
+    body { padding: 10px; display: block; } /* Rimuove il flex dal body per evitare schiacciamenti */
+
+    .app-wrapper { max-width: 100%; }
+
+    /* Forza il layout verticale puro nel setup */
+    .setup-section { 
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: stretch !important; 
+        gap: 20px !important;
+    }
+
+    /* Sistema i singoli contenitori di input */
+    .input-field {
+        width: 100% !important;
+        text-align: left !important;
+    }
+
+    .input-field label {
+        text-align: left !important;
+        margin-left: 5px;
+    }
+
+    /* Rende il tasto Reset visibile e centrato */
+    .btn-reset-wrapper { 
+        order: 2 !important; 
+        margin: 0 !important;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    .btn-reset {
+        width: 50px !important;
+        height: 50px !important;
+        background-color: #f8fafc;
+    }
+
+    /* Ordine degli elementi */
+    .ferie-container { order: 4; width: 100%; }
+    .btn-toggle-sat { order: 5; width: 100% !important; }
+    .btn-primary { order: 6; width: 100% !important; margin-top: 10px; }
+
+    /* Periodi sospensione: facciamoli diventare delle "card" */
+    .periodo-item {
+        flex-direction: column !important;
+        gap: 10px !important;
+        background: #fff !important;
+        padding: 12px !important;
+        border: 1px solid var(--border) !important;
+    }
+
+    .periodo-item input[type="date"] {
+        width: 100% !important;
+    }
+
+    .btn-remove-periodo {
+        width: 100% !important;
+        height: 40px !important;
+    }
+
+    /* --- RISULTATI E STATS (AFFIANCATE) --- */
+    .stats-grid { 
+        grid-template-columns: 1fr 1fr !important; /* Qui le teniamo affiancate */
+        gap: 10px !important;
+    }
+
+    .stat-val { font-size: 1.1rem !important; }
+    .stat-label { font-size: 0.6rem !important; }
+
+    .target-date-card { padding: 15px 10px !important; }
+    .target-date-card h2 { font-size: 1.2rem !important; }
+}
+
+/* Fix per la sezione input quando lo schermo è largo o ruotato */
+@media (max-width: 900px) {
+    .setup-section {
+        display: flex;
+        flex-direction: column; /* Forza gli elementi uno sopra l'altro */
+        gap: 15px;
+        padding: 10px;
+    }
+
+    .input-field {
+        width: 100% !important; /* Forza l'input a occupare tutta la larghezza */
+    }
+
+    /* Mantieni input durata e reset affiancati ma leggibili */
+    .input-reset-group {
+        display: flex;
+        gap: 8px;
+        width: 100%;
+    }
+}
+
+/* Assicurati che il contenitore dell'app non sia troppo stretto in landscape */
+.app-wrapper {
+    max-width: 500px;
+    margin: 0 auto;
+    width: 95%;
+}
+
+/* =========================================
+   8. SEZIONE FERIE A SCOMPARSA
+   ========================================= */
+
+/* Sezione Ferie a scomparsa */
+.ferie-container {
+    grid-column: 1 / -1;
+    margin-bottom: 10px;
+}
+
+.btn-ferie-toggle {
+    width: 100%;
+    padding: 12px 15px; /* Padding bilanciato */
+    background: transparent;
+    border: 1px dashed var(--border);
+    color: var(--text-sub);
+    border-radius: 12px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    font-weight: 700;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: row; 
+    align-items: center;    /* Centra verticalmente testo e badge */
+    justify-content: center; /* Centra tutto il blocco orizzontalmente */
+    gap: 10px;               /* Spazio tra testo e badge */
+    text-align: center;
+}
+
+.btn-ferie-toggle .text-group {
+    display: flex;
+    flex-direction: column; /* Incolonna le due righe di testo */
+    gap: 2px;               /* Spazio minimo tra le due righe */
+}
+/* Base per PC: testo su una riga sola */
+.btn-ferie-toggle .text-top,
+.btn-ferie-toggle .text-bottom {
+    display: inline;
+}
+
+/* =========================================
+   SOLO PER MOBILE (Schermi sotto 480px)
+   ========================================= */
+@media (max-width: 480px) {
+    .btn-ferie-toggle {
+        padding: 18px 10px; /* Più alto su mobile per un tocco facile */
+        justify-content: space-between; /* Testo a sinistra, badge a destra */
+    }
+
+    /* Forza il testo su due righe specifiche */
+    .btn-ferie-toggle .text-top {
+        display: block; /* Va a capo */
+        font-size: 0.85rem; /* Un po' più grande */
+    }
+    
+    .btn-ferie-toggle .text-bottom {
+        display: block; /* Va a capo */
+        font-size: 0.85rem; /* Un po' più piccolo, secondario */
+    }
+
+    /* Centra il testo orizzontalmente dentro il suo gruppo */
+    .btn-ferie-toggle .text-group {
+        text-align: center; /* Testo allineato a sinistra, come richiesto */
+        flex: 1;          /* Occupa lo spazio disponibile a sinistra */
+    }
+
+    /* Allinea il badge sulla destra, centrato verticalmente */
+    .badge-count {
+        position: relative;
+        margin-left: auto; /* Lo spinge tutto a destra */
+        /* Il centraggio verticale è già gestito dal Flexbox del pulsante (align-items: center) */
+    }
+}
+
+.badge-count {
+    background-color: var(--primary);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    flex-shrink: 0; /* Impedisce al cerchietto di schiacciarsi */
+}
+
+.ferie-menu {
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 15px;
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: all 1s ease-in-out;
+}
+
+.check-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-main);
+    cursor: pointer;
+}
+
+.check-item input {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+input:focus {
+    border-color: var(--primary);
+    outline: none;
+    box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+/* Quando ci sono sospensioni o patrono attivi, il tasto si evidenzia leggermente */
+.btn-ferie-toggle.has-data {
+    border-color: var(--primary);
+    background-color: #f0f7ff; /* Un azzurro chiarissimo */
+    color: var(--primary);
+    font-weight: 700;
+}
+
+/* Un piccolo indicatore visivo (freccetta) che ruota quando apri/chiudi */
+.btn-ferie-toggle::after {
+    content: '▼';
+    font-size: 0.7rem;
+    margin-left: 10px;
+    transition: transform 0.3s;
+    display: inline-block;
+}
+
+.btn-ferie-toggle.open::after {
+    transform: rotate(180deg);
+}
+
+/* Stile per i periodi di sospensione dinamici */
+.periodo-item {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+    align-items: center;
+    animation: slideIn 0.2s ease-out;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.periodo-item input[type="date"] {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
+
+.btn-remove-periodo {
+    background: #fee2e2;
+    color: #dc2626;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.btn-remove-periodo:hover {
+    background: #fecaca;
+}
+
+.btn-aggiungi-periodo {
+    width: 100%;
+    background: var(--bg-card);
+    color: var(--primary);
+    border: 2px dashed var(--primary);
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+/* Stile per campi ferie errati */
+.input-error {
+    border: 2px solid var(--danger-text) !important;
+    background-color: var(--danger-bg) !important;
+}
+
+.warning-text {
+    color: var(--danger-text);
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-top: -5px;
+    margin-bottom: 10px;
+    display: none; /* Nascosto di default */
+}
+
+.periodo-header {
+    margin-bottom: 5px;
+}
+
+.f-note {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.8rem;
+    padding: 4px 0;
+    color: var(--primary);
+    background: transparent;
+    outline: none;
+}
+
+.f-note:focus {
+    border-bottom-color: var(--primary);
+}
+
+/* Colora il testo di suggerimento (placeholder) */
+.f-note::placeholder {
+    color: var(--primary); /* Lo rende azzurro come il tuo colore principale */
+    opacity: 0.6;          /* Leggermente trasparente per farlo sembrare un suggerimento */
+    font-size: 0.75rem;    /* Un pizzico più piccolo per eleganza */
+}
+
+/* Compatibilità specifica per i browser basati su Webkit (Safari/Chrome su iPhone) */
+.f-note::-webkit-input-placeholder {
+    color: var(--primary);
+    opacity: 0.6;
+}
+
+/* Badge per il conteggio sospensioni */
+.badge-count {
+    background-color: #2563eb; /* Blu di default */
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 12px;
+    margin-left: 10px;
+    display: inline-block;
+    vertical-align: middle;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+/* Colore arancione se c'è un errore nelle date */
+.badge-error {
+    background-color: #f59e0b !important; /* Arancione */
+    animation: pulse-error 1.5s infinite;
+}
+
+@keyframes pulse-error {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); box-shadow: 0 0 10px #f59e0b; }
+    100% { transform: scale(1); }
+}
+
+/* Stile per la sospensione fuori dal periodo calcolato */
+.periodo-fuori-raggio {
+    opacity: 0.5; /* Diventa semitrasparente */
+    filter: grayscale(0.8); /* Quasi in bianco e nero */
+    border: 1px dashed #cbd5e1; /* Bordo tratteggiato */
+    background-color: #f8fafc;
+    transition: all 0.4s ease;
+}
+
+/* Un piccolo badge interno opzionale per chiarezza */
+.fuori-label {
+    font-size: 0.6rem;
+    color: #64748b;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-left: 5px;
+}
+
+/* =========================================
+   9. CALENDARIO E MAPPA VISIVA
+   ========================================= */
+
+/* --- NUOVO SELETTORE VISTA (LISTA/CALENDARIO) --- */
+
+/* Contenitore dei bottoni */
+.scelta-vista-switcher {
+    display: flex;
+    background: #f1f5f9; /* Grigio freddo chiaro */
+    padding: 6px;
+    border-radius: 14px;
+    margin: 20px 0;
+    gap: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+/* Stile base simile al btn-toggle-sat */
+.view-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+    color: #64748b;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+/* Quando il tasto è "attivo" (finestra aperta) */
+.view-btn.active {
+    background: white;
+    color: var(--primary);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transform: translateY(-1px);
+}
+
+.view-btn:not(.active):hover {
+    background: #e2e8f0;
+    color: #475569;
+}
+
+/* Animazione di entrata per i dati (Tabella o Calendario) */
+#logContainer, #calendarContainer {
+    animation: fadeIn 0.3s ease-out;
+}
+
+.view-selector {
+    display: flex;
+    justify-content: center;
+    background-color: #f1f5f9; /* Sfondo grigio chiaro del contenitore */
+    padding: 4px;
+    border-radius: 10px;
+    margin: 15px 0;
+    border: 1px solid #e2e8f0;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.view-btn {
+    flex: 1;
+    padding: 8px 12px;
+    border: none;
+    background: transparent;
+    color: #64748b;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+/* ANIMAZIONE DI VIBRAZIONE PER ATTENZIONE */
+
+/* Stato attivo del tasto (quando selezionato) */
+.view-btn.active {
+    background-color: white;
+    color: #2563eb;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* --- CALENDARIO E MAPPA VISIVA (Tuo codice esistente ottimizzato) --- */
+.calendar-card {
+    background: white;
+    padding: 15px; /* Ridotto leggermente per mobile */
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    margin-top: 10px;
+}
+
+#calendarGrid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-top: 10px;
+}
+
+/* HEADER GIORNI (L, M, M...) */
+.cal-header {
+    text-align: center;
+    font-weight: 800;
+    font-size: 0.7rem;
+    color: #94a3b8;
+    padding-bottom: 5px;
+    text-transform: uppercase;
+}
+
+/* QUADRATINO GIORNO */
+.cal-day {
+    aspect-ratio: 1 / 1;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #f1f5f9;
+    transition: transform 0.1s;
+}
+
+.cal-date {
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.cal-label {
+    font-size: 0.55rem;
+    font-weight: 600;
+    text-align: center;
+    line-height: 1;
+}
+
+/* --- OTTIMIZZAZIONE TELEFONO --- */
+@media (max-width: 480px) {
+    #calendarGrid {
+        gap: 2px; /* Spazio minimo tra i giorni */
+    }
+
+    .cal-day {
+        border-radius: 4px;
+    }
+
+    .cal-date {
+        font-size: 0.8rem; /* Numeri leggermente più piccoli */
+    }
+
+    /* Nascondiamo il testo lungo (es. "LAVORATIVO") e lasciamo solo il numero GG o un puntino */
+    .cal-label {
+        font-size: 0.5rem;
+        transform: scale(0.8); /* Forza la riduzione se il font non scende più */
+    }
+
+    /* Se è un weekend o festa, nascondiamo la scritta per non affollare */
+    .cal-weekend .cal-label, 
+    .cal-festa .cal-label, 
+    .cal-sosp .cal-label {
+        display: none; 
+    }
+    
+    /* Aggiungiamo un piccolo puntino colorato in basso per indicare lo stato senza testo */
+    .cal-festa::after, .cal-sosp::after, .cal-weekend::after {
+        content: "";
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        margin-top: 2px;
+    }
+/* Aggiungiamo un piccolo puntino colorato in basso */
+    .cal-festa::after, .cal-sosp::after, .cal-weekend::after {
+        content: "";
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        margin-top: 2px;
+    }
+
+    /* Weekend e Festa ora hanno entrambi il pallino ROSSO */
+    .cal-festa::after, .cal-weekend::after { 
+        background: #ef4444; 
+    }
+
+    /* Sospensione rimane ARANCIONE */
+    .cal-sosp::after { 
+        background: #f97316; 
+    }
+}
+/* Colori Mappa */
+
+/* Verde */
+.cal-lavorativo { background-color: #dcfce7; color: #166534; border-color: #bbf7d0; }
+/* Weekend ora è rosso come la festa */
+.cal-weekend, .cal-festa { background-color: #fee2e2 !important; color: #991b1b !important; border-color: #fecaca !important; }
+/* Arancio */
+.cal-sosp { background-color: #fef3c7; color: #92400e; border-color: #fde68a; } 
+
+/* Titolo del mese nel calendario */
+.cal-month-title {
+    grid-column: span 7; /* Occupa tutte e 7 le colonne della griglia */
+    text-align: left;
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: #1e293b;
+    padding: 20px 0 10px 5px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid #f1f5f9;
+    margin-bottom: 5px;
+}
+
+/* Un piccolo aggiustamento per distanziare i mesi se ce n'è più di uno */
+.cal-month-title:not(:first-child) {
+    margin-top: 20px;
+}
+
+/* =========================================
+   10. OVERLAY DI BLOCCO
+   ========================================= */
+/* Overlay di Blocco */
+.lock-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #f8fafc; /* Grigio molto chiaro professionale */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000; /* Sopra a ogni cosa */
+}
+
+.lock-card {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    border: 1px solid #e2e8f0;
+}
+
+.lock-card h2 {
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+}
+
+.lock-card p {
+    color: #64748b;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+}
+
+.lock-card input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    transition: all 0.2s;
+}
+
+.lock-card input:focus {
+    border-color: #2563eb;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+#lockError {
+    font-weight: 600;
+    margin-top: 10px;
+}
+
+/* region =========================================
+   11. PULSANTE FEEDBACK
+   ========================================= */
+
+/* Pulsante Flottante */
+.btn-feedback-float {
+    position: fixed; bottom: 25px; right: 25px;
+    background: #2563eb; border: none; border-radius: 50%;
+    width: 60px; height: 60px; display: flex;
+    align-items: center; justify-content: center;
+    cursor: pointer; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
+    transition: transform 0.2s; z-index: 999;
+    border: 2px solid rgba(255, 255, 255, 0.3); /* Bordo bianco semi-trasparente */
+    box-sizing: border-box; 
+}
+.btn-feedback-float:hover { 
+    transform: scale(1.1); 
+    border-color: rgba(255, 255, 255, 1); /* Il bordo diventa bianco pieno quando ci passi sopra */
+}
+/* Modal Overlay */
+/* --- OVERLAY BLOCCATO --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10001;
+    backdrop-filter: blur(4px);
+    
+    /* Impedisce spostamenti strani su mobile e PC */
+    overflow: hidden; 
+    touch-action: none; 
+}
+
+/* --- SCHEDA FEEDBACK AGGIORNATA --- */
+.modal-card {
+    background: white;
+    padding: 25px;
+    border-radius: 20px;
+    
+    /* Larghezza fissa e sicura */
+    width: 90%; 
+    max-width: 380px; 
+    
+    /* Impedisce spostamenti e garantisce la centratura */
+    margin: auto; 
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    animation: slideUp 0.3s ease-out;
+    
+    /* Impedisce che il contenuto esca se ridimensionato male */
+    box-sizing: border-box; 
+}
+
+/* --- TEXTAREA BLOCCATA --- */
+.modal-card textarea {
+    width: 100%;
+    height: 140px;
+    padding: 12px;
+    margin: 15px 0;
+    border: 2px solid var(--border, #e2e8f0);
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 16px;
+    outline: none;
+    
+    /* BLOCCA IL RIDIMENSIONAMENTO MANUALE */
+    resize: none; 
+    
+    /* Evita che il bordo aggiunga larghezza extra */
+    box-sizing: border-box; 
+}
+
+/* Scheda Modal */
+.modal-card {
+    background: white;
+    padding: 25px;
+    border-radius: 20px;
+    
+    /* Larghezza fissa e sicura */
+    width: 90%; 
+    max-width: 380px; 
+    
+    /* Impedisce spostamenti e garantisce la centratura */
+    margin: auto; 
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    animation: slideUp 0.3s ease-out;
+    
+    /* Impedisce che il contenuto esca se ridimensionato male */
+    box-sizing: border-box; 
+}
+
+/* Ottimizzazione per la textarea su mobile */
+.modal-card textarea {
+    width: 100%;
+    height: 140px;
+    padding: 12px;
+    margin: 15px 0;
+    border: 2px solid var(--border, #e2e8f0);
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 16px;
+    outline: none;
+    
+    /* BLOCCA IL RIDIMENSIONAMENTO MANUALE */
+    resize: none; 
+    
+    /* Evita che il bordo aggiunga larghezza extra */
+    box-sizing: border-box; 
+}
+.modal-card textarea:focus { border-color: #2563eb; }
+
+.modal-footer { display: flex; gap: 10px; justify-content: flex-end; }
+.btn-cancel { background: #f1f5f9; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; }
+.btn-send { background: #2563eb; color: white; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-weight: 600; }
+
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* BARRA DI CARICAMENTO IN FASE DI ACCESSO */
+/* Container della barra (inizialmente invisibile) */
+.loading-container {
+    width: 100%;
+    height: 4px;
+    background-color: #e2e8f0;
+    border-radius: 2px;
+    margin-top: 15px;
+    overflow: hidden;
+    display: none; /* Si attiva solo al click */
+}
+
+/* La barra vera e propria con animazione */
+.loading-bar {
+    width: 30%;
+    height: 100%;
+    background-color: var(--primary, #2563eb);
+    border-radius: 2px;
+    animation: loading-move 1s infinite ease-in-out;
+}
+
+@keyframes loading-move {
+    0% { transform: translateX(-100%); }
+    50% { transform: translateX(150%); }
+    100% { transform: translateX(300%); }
+}
+
+/* =========================================
+   12. MODAL SCELTA STAMPA (PDF)
+   ========================================= */
+
+/* Sfondo scuro che copre tutto */
+#printModal.modal-overlay {
+    z-index: 10002; /* Un livello sopra il feedback per sicurezza */
+}
+
+/* Contenitore dei bottoni dentro il modal di stampa */
+.print-options-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 20px;
+    width: 100%;
+}
+
+/* Bottoni interni al modal */
+.btn-modal-print {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* Stile per le opzioni singole (Lista o Calendario) */
+.btn-print-single {
+    background: var(--primary-light);
+    color: var(--primary);
+    border: 1px solid var(--primary);
+}
+
+/* Stile per l'opzione "Entrambi" */
+.btn-print-all-modal {
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+}
+
+.btn-modal-print:hover {
+    transform: translateY(-2px);
+    filter: brightness(0.95);
+}
+
+.btn-modal-print:active {
+    transform: translateY(0);
+}
+
+
+/* BARRA LATERALE DI NAVIGAZIONE */
+.profile-sidebar {
+    position: fixed;
+    top: 0;
+    right: -100%; /* Nascosta a destra */
+    width: 300px;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: -5px 0 25px rgba(0,0,0,0.1);
+    z-index: 10000;
+    transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    padding: 30px 20px;
+}
+
+.profile-sidebar.open {
+    right: 0;
+}
+
+.user-info {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.user-avatar {
+    width: 60px;
+    height: 60px;
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin: 0 auto 10px;
+}
+
+.profile-section h4 {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--text-sub);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.mini-log {
+    list-style: none;
+    padding: 0;
+    font-size: 0.8rem;
+    color: var(--text-main);
+}
+
+.mini-log li {
+    padding: 5px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.btn-save-local {
+    width: 100%;
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 15px;
+    cursor: pointer;
+}
+
+.profile-trigger {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 30px; /* Forma a pillola */
+    padding: 5px 12px 5px 5px; /* Spazio per l'avatar e il testo */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    z-index: 100;
+}
+
+.profile-trigger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.12);
+    border-color: var(--primary);
+}
+
+/* Cerchio colorato con l'iniziale dentro la capsula */
+.trigger-avatar {
+    width: 30px;
+    height: 30px;
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.8rem;
+}
+
+/* Testo "Il mio Profilo" o Nome Utente */
+.trigger-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-main);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.project-card-mini {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.project-card-mini:hover { transform: translateX(5px); border-color: var(--primary); }
+.project-info { display: flex; flex-direction: column; flex-grow: 1; }
+.project-info strong { font-size: 0.85rem; color: var(--text-main); }
+.project-info small { font-size: 0.7rem; color: var(--text-sub); }
+.btn-del-project { background: none; border: none; color: #cbd5e1; font-size: 1.2rem; cursor: pointer; padding: 0 5px; }
+.btn-del-project:hover { color: #ef4444; }
+
+/* Pulsante di chiusura Sidebar (la X in alto) */
+.close-sidebar {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--text-sub);
+    cursor: pointer;
+}
+
+/* Messaggio quando non ci sono progetti */
+.empty-msg {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    text-align: center;
+    padding: 20px;
+}
+
+/* Pulsante Logout */
+.btn-logout {
+    width: 100%;
+    margin-top: 40px;
+    background: #fee2e2;
+    color: #ef4444;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+@media (max-width: 480px) {
+    header {
+        position: relative;
+        overflow: visible !important;
+        /* Aumentiamo il padding superiore per lasciare spazio alla linguetta che "vola" sopra */
+        padding-top: 50px !important; 
+        text-align: center;
+    }
+
+    .profile-trigger {
+        position: absolute;
+        /* La mettiamo quasi attaccata al bordo superiore */
+        top: 10px; 
+        /* Esce per metà dallo schermo a destra */
+        right: -25px; 
+        
+        background: var(--primary);
+        color: white;
+        border: none;
+        
+        /* Design a Linguetta "Tab" */
+        border-radius: 30px 0 0 30px; 
+        padding: 5px 20px 5px 10px; /* Più padding a destra perché è nascosto */
+        
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        box-shadow: -3px 3px 12px rgba(0, 0, 0, 0.15);
+        z-index: 999;
+        transition: all 0.3s ease;
+    }
+
+    /* Effetto estrazione al tocco */
+    .profile-trigger:active {
+        right: 0;
+        padding-right: 12px;
+    }
+
+    .trigger-avatar {
+        width: 24px;
+        height: 24px;
+        background: white;
+        color: var(--primary);
+        border-radius: 50%;
+        font-weight: 800;
+        font-size: 0.7rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .trigger-label {
+        color: white !important;
+        font-size: 0.55rem !important; /* Molto piccolo e discreto */
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+    }
+
+    /* SISTEMAZIONE TITOLO */
+    header h1 {
+        font-size: 1.6rem !important;
+        margin: 0 auto !important;
+        position: relative;
+        z-index: 1; /* Sta sotto la linguetta se dovessero mai toccarsi */
+    }
+}
